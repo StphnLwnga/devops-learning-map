@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DevOps Learning Map</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0C0C0E;
+    --surface: #151518;
+    --surface2: #1C1C20;
+    --border: #2A2A30;
+    --border-light: #35353D;
+    --text: #E8E6E1;
+    --text-dim: #8A8890;
+    --text-muted: #5C5B63;
+
+    --tier-found: #F59E0B;
+    --tier-found-bg: rgba(245, 158, 11, 0.06);
+    --tier-found-border: rgba(245, 158, 11, 0.15);
+
+    --tier-core: #6366F1;
+    --tier-core-bg: rgba(99, 102, 241, 0.06);
+    --tier-core-border: rgba(99, 102, 241, 0.15);
+
+    --tier-adv: #10B981;
+    --tier-adv-bg: rgba(16, 185, 129, 0.06);
+    --tier-adv-border: rgba(16, 185, 129, 0.15);
+
+    --c-linux: #F97316;
+    --c-network: #EAB308;
+    --c-scripting: #F59E0B;
+    --c-git: #D97706;
+    --c-cloud: #CA8A04;
+
+    --c-cicd: #818CF8;
+    --c-containers: #6366F1;
+    --c-iac: #7C3AED;
+    --c-monitoring: #A78BFA;
+    --c-security: #8B5CF6;
+    --c-culture: #6D28D9;
+
+    --c-sre: #34D399;
+    --c-platform: #10B981;
+    --c-finops: #059669;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .noise {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  header p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .tier {
+    margin-bottom: 24px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+
+  .tier:hover {
+    border-color: var(--border-light);
+  }
+
+  .tier-header {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: default;
+  }
+
+  .tier-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .tier-found .tier-header { background: var(--tier-found-bg); }
+  .tier-found .tier-badge { background: rgba(245,158,11,0.12); color: var(--tier-found); border: 1px solid var(--tier-found-border); }
+  .tier-found { border-color: var(--tier-found-border); }
+
+  .tier-core .tier-header { background: var(--tier-core-bg); }
+  .tier-core .tier-badge { background: rgba(99,102,241,0.12); color: var(--tier-core); border: 1px solid var(--tier-core-border); }
+  .tier-core { border-color: var(--tier-core-border); }
+
+  .tier-adv .tier-header { background: var(--tier-adv-bg); }
+  .tier-adv .tier-badge { background: rgba(16,185,129,0.12); color: var(--tier-adv); border: 1px solid var(--tier-adv-border); }
+  .tier-adv { border-color: var(--tier-adv-border); }
+
+  .tier-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .tier-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tier-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+    padding: 0;
+  }
+
+  .tier-found .tier-grid { grid-template-columns: repeat(5, 1fr); }
+  .tier-core .tier-grid { grid-template-columns: repeat(3, 1fr); }
+  .tier-adv .tier-grid { grid-template-columns: repeat(3, 1fr); }
+
+  @media (max-width: 680px) {
+    .tier-found .tier-grid { grid-template-columns: repeat(3, 1fr); }
+    .tier-core .tier-grid { grid-template-columns: repeat(2, 1fr); }
+    .tier-adv .tier-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 440px) {
+    .tier-found .tier-grid { grid-template-columns: repeat(2, 1fr); }
+    .tier-core .tier-grid { grid-template-columns: 1fr; }
+    .tier-adv .tier-grid { grid-template-columns: 1fr; }
+  }
+
+  .node {
+    background: var(--surface);
+    padding: 20px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .node::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .node:hover { background: var(--surface2); }
+  .node:hover::before { opacity: 1; }
+  .node.active { background: var(--surface2); }
+  .node.active::before { opacity: 1; }
+
+  .node-icon {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .node-name {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  .node-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+    padding: 0;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+
+  .detail-panel.open {
+    transform: translateY(0);
+  }
+
+  .detail-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 28px 32px;
+  }
+
+  .detail-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .detail-close {
+    background: none;
+    border: 1px solid var(--border-light);
+    color: var(--text-dim);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .detail-close:hover { background: var(--surface2); }
+
+  .detail-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .detail-about {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  .detail-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .detail-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .pill {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .detail-resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .res-pill {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.15);
+    color: #818CF8;
+  }
+
+  .detail-prompt {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .detail-prompt p {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-style: italic;
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .copy-btn:hover { background: var(--border); }
+
+  /* Connection lines between tiers */
+  .tier-connector {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+  }
+
+  .tier-connector svg {
+    display: block;
+  }
+
+  .flow-label {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 0;
+  }
+
+  /* Animate nodes in */
+  .node {
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="container">
+
+<header>
+  <h1>DevOps Learning Roadmap</h1>
+  <p>Three-tier concept map — foundations first, then core practices, then specialization</p>
+</header>
+
+<!-- TIER 1: Foundations -->
+<div class="tier tier-found">
+  <div class="tier-header">
+    <span class="tier-badge">Tier 1</span>
+    <span class="tier-title">Foundations</span>
+    <span class="tier-sub">learn these first</span>
+  </div>
+  <div class="tier-grid" id="grid-found"></div>
+</div>
+
+<div class="tier-connector">
+  <svg width="24" height="28" viewBox="0 0 24 28">
+    <line x1="12" y1="0" x2="12" y2="20" stroke="#35353D" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <polygon points="6,18 12,26 18,18" fill="#35353D"/>
+  </svg>
+</div>
+<div class="flow-label">enables</div>
+
+<!-- TIER 2: Core Practices -->
+<div class="tier tier-core">
+  <div class="tier-header">
+    <span class="tier-badge">Tier 2</span>
+    <span class="tier-title">Core Practices</span>
+    <span class="tier-sub">the devops toolkit</span>
+  </div>
+  <div class="tier-grid" id="grid-core"></div>
+</div>
+
+<div class="tier-connector">
+  <svg width="24" height="28" viewBox="0 0 24 28">
+    <line x1="12" y1="0" x2="12" y2="20" stroke="#35353D" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <polygon points="6,18 12,26 18,18" fill="#35353D"/>
+  </svg>
+</div>
+<div class="flow-label">unlocks</div>
+
+<!-- TIER 3: Advanced -->
+<div class="tier tier-adv">
+  <div class="tier-header">
+    <span class="tier-badge">Tier 3</span>
+    <span class="tier-title">Advanced / Specialization</span>
+    <span class="tier-sub">differentiation</span>
+  </div>
+  <div class="tier-grid" id="grid-adv"></div>
+</div>
+
+</div>
+
+<!-- Detail panel -->
+<div class="detail-panel" id="panel">
+  <div class="detail-inner">
+    <div class="detail-top">
+      <div>
+        <div class="detail-title" id="p-title"></div>
+        <div class="detail-about" id="p-about"></div>
+      </div>
+      <button class="detail-close" id="p-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="detail-section-label">Key topics</div>
+    <div class="detail-topics" id="p-topics"></div>
+    <div class="detail-section-label">Suggested tools / resources</div>
+    <div class="detail-resources" id="p-resources"></div>
+    <div class="detail-prompt">
+      <p id="p-prompt"></p>
+      <button class="copy-btn" id="p-copy">Copy</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  foundations: [
+    {
+      id: 'linux', icon: '🐧', name: 'Linux & OS',
+      desc: 'Shell, permissions, processes',
+      color: '--c-linux',
+      about: 'Nearly everything in DevOps runs on Linux. You need fluency with the command line, file systems, process management, systemd services, and package managers before containers or cloud infra will make sense.',
+      topics: ['Bash shell & navigation', 'File permissions & ownership', 'Process management (ps, top, kill)', 'systemd & services', 'Package managers (apt, yum)', 'Cron jobs & scheduling', 'SSH & remote access', 'Filesystem hierarchy'],
+      resources: ['Linux Upskill Challenge', 'OverTheWire Bandit', 'LPIC-1 curriculum'],
+      prompt: 'I\'m learning Linux for DevOps with no CS background. Teach me the essential Linux concepts I need \u2014 shell navigation, file permissions, process management, systemd, and SSH \u2014 with hands-on exercises for each.'
+    },
+    {
+      id: 'networking', icon: '🌐', name: 'Networking',
+      desc: 'DNS, TCP/IP, HTTP, firewalls',
+      color: '--c-network',
+      about: 'When a container can\'t reach a database, when a deploy fails silently, when latency spikes \u2014 it\'s almost always networking. Understanding how data moves between machines is non-negotiable.',
+      topics: ['OSI model & TCP/IP stack', 'DNS resolution', 'HTTP/HTTPS & TLS', 'Ports & sockets', 'Firewalls & iptables', 'Load balancers', 'VPCs, subnets & CIDR', 'Proxy vs reverse proxy'],
+      resources: ['Computer Networking (Kurose & Ross)', 'Practical Networking YouTube', 'Cloudflare Learning Center'],
+      prompt: 'Explain networking fundamentals for a DevOps beginner without CS background: TCP/IP, DNS, HTTP/HTTPS, ports, load balancers, VPCs and subnets. Use real-world analogies and practical examples.'
+    },
+    {
+      id: 'scripting', icon: '\u26a1', name: 'Scripting',
+      desc: 'Bash + Python automation',
+      color: '--c-scripting',
+      about: 'You\'ll write glue code constantly \u2014 automating deployments, parsing logs, wiring tools together, building health checks. Bash for quick system tasks, Python for anything more complex.',
+      topics: ['Bash scripting fundamentals', 'Variables, loops, conditionals', 'Python for automation', 'Working with APIs (curl, requests)', 'Text processing (grep, sed, awk)', 'JSON/YAML parsing', 'Error handling & logging', 'Cron + script scheduling'],
+      resources: ['Automate the Boring Stuff (Python)', 'Bash Academy', 'Shell Scripting Tutorial'],
+      prompt: 'Teach me Bash and Python scripting for DevOps automation. Cover variables, loops, file operations, API calls, text processing, and error handling with practical exercises I can run in a terminal.'
+    },
+    {
+      id: 'git', icon: '🔀', name: 'Git & VCS',
+      desc: 'Branching, merging, workflows',
+      color: '--c-git',
+      about: 'Git is the backbone of everything \u2014 code, infrastructure definitions, pipeline configs, documentation. You need more than git add/commit/push: branching strategies, conflict resolution, and team workflows.',
+      topics: ['Git fundamentals (add, commit, push)', 'Branching & merging strategies', 'Rebasing vs merging', 'Pull requests & code review', 'Git hooks', 'Monorepo vs polyrepo', 'Gitflow / trunk-based development', '.gitignore & secrets hygiene'],
+      resources: ['Pro Git book (free)', 'Learn Git Branching (interactive)', 'GitHub Skills'],
+      prompt: 'Teach me Git beyond the basics for DevOps: branching strategies, rebasing vs merging, pull request workflows, git hooks, and trunk-based development. Include hands-on exercises.'
+    },
+    {
+      id: 'cloud', icon: '\u2601\ufe0f', name: 'Cloud (1 provider)',
+      desc: 'AWS, GCP, or Azure fundamentals',
+      color: '--c-cloud',
+      about: 'Pick one cloud provider and learn it deeply. Understand compute (VMs, serverless), storage (object, block), networking (VPC, security groups), and IAM. AWS has the largest job market share.',
+      topics: ['Compute (EC2 / VMs / Cloud Run)', 'Object storage (S3 / GCS / Blob)', 'Networking (VPC, security groups)', 'IAM & permissions', 'Managed databases (RDS, etc.)', 'CLI & SDK basics', 'Cost management basics', 'Regions & availability zones'],
+      resources: ['AWS Cloud Practitioner path', 'A Cloud Guru / Cantrill', 'Cloud provider free tier labs'],
+      prompt: 'I\'m choosing my first cloud platform for DevOps. Walk me through the core services I need to learn on AWS (or your recommended provider): compute, storage, networking, IAM, and databases with hands-on lab suggestions.'
+    }
+  ],
+  core: [
+    {
+      id: 'cicd', icon: '🔄', name: 'CI/CD Pipelines',
+      desc: 'Automate build, test, deploy',
+      color: '--c-cicd',
+      about: 'Automate code integration, testing, and delivery so shipping is reliable and frequent. This is where DevOps becomes tangible \u2014 every commit triggers a predictable path to production.',
+      topics: ['Continuous Integration concepts', 'Continuous Delivery vs Deployment', 'GitHub Actions / GitLab CI', 'Jenkins pipelines', 'Automated testing in CI', 'Artifact management', 'Blue-green & canary deploys', 'Pipeline-as-code patterns'],
+      resources: ['GitHub Actions docs', 'Jenkins Tutorial', 'Continuous Delivery (Humble & Farley)'],
+      prompt: 'Walk me through how a CI/CD pipeline works end-to-end. Cover the stages from code commit through production deployment, with a practical example using GitHub Actions.'
+    },
+    {
+      id: 'containers', icon: '📦', name: 'Containers & Orchestration',
+      desc: 'Docker, Kubernetes, microservices',
+      color: '--c-containers',
+      about: 'Package apps with all dependencies for portable, consistent deployments. Then orchestrate them at scale with Kubernetes. This is where modern infrastructure lives.',
+      topics: ['Docker fundamentals', 'Dockerfile best practices', 'Container registries', 'Kubernetes architecture', 'Pods, Services, Deployments', 'Helm charts', 'Service mesh (Istio/Linkerd)', 'Microservices patterns'],
+      resources: ['Docker Getting Started', 'Kubernetes the Hard Way', 'KillerCoda interactive labs'],
+      prompt: 'Explain Docker and Kubernetes from scratch. What problem does containerization solve, how does K8s orchestrate containers, and walk me through deploying a simple app to a cluster.'
+    },
+    {
+      id: 'iac', icon: '🏗\ufe0f', name: 'Infrastructure as Code',
+      desc: 'Terraform, Ansible, GitOps',
+      color: '--c-iac',
+      about: 'Define all infrastructure in version-controlled code. No more clicking through cloud consoles \u2014 every server, database, and network rule is declared, repeatable, and auditable.',
+      topics: ['Terraform (HCL basics)', 'State management', 'Ansible for configuration', 'Declarative vs imperative IaC', 'Modules & reusability', 'Immutable infrastructure', 'GitOps (ArgoCD / Flux)', 'Secrets in IaC'],
+      resources: ['Terraform docs + tutorials', 'Ansible Getting Started', 'GitOps with ArgoCD'],
+      prompt: 'Explain Infrastructure as Code for someone new to it. Cover Terraform and Ansible \u2014 what each does, when to use which, and walk me through writing my first Terraform config.'
+    },
+    {
+      id: 'monitoring', icon: '📊', name: 'Monitoring & Observability',
+      desc: 'Metrics, logs, traces, alerting',
+      color: '--c-monitoring',
+      about: 'You can\'t fix what you can\'t see. Monitoring tells you something is wrong; observability helps you understand why. Build dashboards, set up alerts, and learn to debug distributed systems.',
+      topics: ['Metrics (Prometheus)', 'Dashboards (Grafana)', 'Log aggregation (ELK / Loki)', 'Distributed tracing (Jaeger)', 'Alerting & on-call', 'SLAs, SLOs & SLIs', 'Error budgets', 'Structured logging'],
+      resources: ['Prometheus + Grafana labs', 'Observability Engineering (O\'Reilly)', 'Google SRE Workbook (free)'],
+      prompt: 'What is the difference between monitoring and observability? Teach me the three pillars (metrics, logs, traces) and how to set up a basic observability stack with Prometheus and Grafana.'
+    },
+    {
+      id: 'security', icon: '🔒', name: 'DevSecOps',
+      desc: 'Shift-left security, scanning, secrets',
+      color: '--c-security',
+      about: 'Integrate security into every pipeline stage. Scan code, scan dependencies, scan containers, manage secrets properly, and think about zero-trust from day one.',
+      topics: ['Shift-left security mindset', 'SAST & DAST scanning', 'Container image scanning', 'Secrets management (Vault)', 'Dependency vulnerability scanning', 'Compliance as code (OPA)', 'RBAC & least privilege', 'Zero-trust networking'],
+      resources: ['OWASP DevSecOps Guideline', 'HashiCorp Vault tutorials', 'Snyk Learn'],
+      prompt: 'How does DevSecOps integrate security throughout the CI/CD pipeline? Cover SAST, DAST, container scanning, secrets management, and compliance as code with practical tooling examples.'
+    },
+    {
+      id: 'culture', icon: '🤝', name: 'Culture & Collaboration',
+      desc: 'Agile, shared ownership, feedback',
+      color: '--c-culture',
+      about: 'DevOps is a cultural shift more than a toolchain. Breaking down silos, shared ownership of outcomes, blameless post-mortems, and continuous feedback loops are what make the tools effective.',
+      topics: ['Agile & Lean thinking', 'Shared ownership model', 'Blameless post-mortems', 'Continuous feedback loops', 'Cross-functional teams', 'Psychological safety', 'Value stream mapping', 'DORA metrics'],
+      resources: ['The Phoenix Project (book)', 'Accelerate (Forsgren et al.)', 'Team Topologies'],
+      prompt: 'Explain the DevOps culture shift \u2014 why culture matters more than tools, how to run blameless post-mortems, what DORA metrics measure, and how to build shared ownership between dev and ops.'
+    }
+  ],
+  advanced: [
+    {
+      id: 'sre', icon: '🚨', name: 'SRE Practices',
+      desc: 'Reliability, incidents, chaos engineering',
+      color: '--c-sre',
+      about: 'Site Reliability Engineering applies software engineering to operations. Think error budgets, incident management runbooks, on-call rotations, chaos experiments, and systematic toil reduction.',
+      topics: ['Error budgets & SLOs', 'Incident management', 'Runbooks & playbooks', 'On-call best practices', 'Chaos engineering (Chaos Monkey)', 'Toil reduction', 'Capacity planning', 'Post-incident review'],
+      resources: ['Google SRE Book (free)', 'Gremlin Chaos Engineering', 'PagerDuty Incident Response'],
+      prompt: 'Teach me SRE practices: error budgets, incident management, chaos engineering, and toil reduction. How does SRE differ from traditional ops and how does it complement DevOps?'
+    },
+    {
+      id: 'platform', icon: '🧩', name: 'Platform Engineering',
+      desc: 'Internal developer platforms, self-service',
+      color: '--c-platform',
+      about: 'Build golden paths that make it easy for developers to deploy, monitor, and manage their own services without filing tickets. Internal Developer Platforms are the evolution of DevOps at scale.',
+      topics: ['Internal Developer Platforms', 'Backstage / Port / Kratix', 'Golden paths & templates', 'Self-service infrastructure', 'Developer experience (DX)', 'Platform-as-a-product', 'API gateways & service catalogs', 'Multi-tenancy patterns'],
+      resources: ['Platform Engineering on K8s', 'Backstage.io docs', 'Team Topologies (book)'],
+      prompt: 'What is platform engineering and how does it differ from DevOps? Explain internal developer platforms, golden paths, and the platform-as-a-product mindset with real-world examples.'
+    },
+    {
+      id: 'finops', icon: '💰', name: 'FinOps & Optimization',
+      desc: 'Cloud cost management, efficiency',
+      color: '--c-finops',
+      about: 'Cloud bills can spiral fast. FinOps brings financial accountability to cloud spending \u2014 tagging, right-sizing, reserved instances, spot/preemptible compute, and cost-aware architecture decisions.',
+      topics: ['Cloud cost visibility & tagging', 'Right-sizing resources', 'Reserved / savings plans', 'Spot & preemptible instances', 'Cost allocation & showback', 'FinOps Foundation framework', 'Architecture cost trade-offs', 'Sustainability & green ops'],
+      resources: ['FinOps Foundation', 'AWS Well-Architected (Cost)', 'Infracost (IaC cost checks)'],
+      prompt: 'Explain FinOps for DevOps engineers. How do I manage cloud costs effectively \u2014 tagging strategies, right-sizing, reserved instances, and building cost awareness into infrastructure decisions?'
+    }
+  ]
+};
+
+function renderNodes(containerId, items) {
+  const grid = document.getElementById(containerId);
+  items.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'node';
+    div.dataset.id = item.id;
+    div.style.animationDelay = `${i * 0.06}s`;
+    div.style.setProperty('--accent', `var(${item.color})`);
+    div.innerHTML = `
+      <span class="node-icon">${item.icon}</span>
+      <div class="node-name">${item.name}</div>
+      <div class="node-desc">${item.desc}</div>
+    `;
+    div.querySelector('.node-name').style.color = `var(${item.color})`;
+    div.style.cssText += `--node-accent: var(${item.color})`;
+    const bar = div.querySelector('::before');
+    div.addEventListener('click', () => openPanel(item));
+    grid.appendChild(div);
+  });
+}
+
+// Set accent color for left bar via CSS
+document.head.insertAdjacentHTML('beforeend', '<style>' +
+  Object.values(DATA).flat().map(item =>
+    `.node[data-id="${item.id}"]::before { background: var(${item.color}); }`
+  ).join('\n') +
+'</style>');
+
+renderNodes('grid-found', DATA.foundations);
+renderNodes('grid-core', DATA.core);
+renderNodes('grid-adv', DATA.advanced);
+
+const panel = document.getElementById('panel');
+const allItems = [...DATA.foundations, ...DATA.core, ...DATA.advanced];
+
+function openPanel(item) {
+  // Clear active
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+  document.querySelector(`.node[data-id="${item.id}"]`).classList.add('active');
+
+  document.getElementById('p-title').textContent = item.icon + ' ' + item.name;
+  document.getElementById('p-title').style.color = `var(${item.color})`;
+  document.getElementById('p-about').textContent = item.about;
+  document.getElementById('p-topics').innerHTML = item.topics.map(t => `<span class="pill">${t}</span>`).join('');
+  document.getElementById('p-resources').innerHTML = item.resources.map(r => `<span class="res-pill">${r}</span>`).join('');
+  document.getElementById('p-prompt').textContent = `"${item.prompt}"`;
+
+  const copyBtn = document.getElementById('p-copy');
+  copyBtn.textContent = 'Copy';
+  copyBtn.onclick = () => {
+    navigator.clipboard.writeText(item.prompt).catch(() => {});
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+  };
+
+  panel.classList.add('open');
+}
+
+document.getElementById('p-close').addEventListener('click', () => {
+  panel.classList.remove('open');
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+});
+
+// Close on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    panel.classList.remove('open');
+    document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+  }
+});
+</script>
+</body>
+</html>
