@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Git &amp; Version Control — DevOps Easy Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/shared.css"/>
+<style>
+  /* ── Nav ─────────────────────────────────────────────── */
+  .top-nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,14,0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px;
+    z-index: 100;
+  }
+  .top-nav .brand {
+    font-weight: 700; font-size: 15px; color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .top-nav .back-link {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s;
+  }
+  .top-nav .back-link:hover { color: var(--text); }
+
+  /* ── Layout ──────────────────────────────────────────── */
+  .page-wrapper {
+    position: relative; z-index: 1;
+    display: flex;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding-top: 56px;
+  }
+
+  /* ── Sidebar / TOC ───────────────────────────────────── */
+  .sidebar {
+    position: sticky; top: 72px; align-self: flex-start;
+    width: 230px; min-width: 230px;
+    padding: 32px 0 32px 28px;
+    height: calc(100vh - 72px);
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); margin-bottom: 14px;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { margin-bottom: 2px; }
+  .sidebar a {
+    display: block; padding: 6px 12px;
+    font-size: 13px; color: var(--text-dim);
+    border-radius: 6px; transition: background 0.15s, color 0.15s;
+    line-height: 1.45;
+  }
+  .sidebar a:hover { background: var(--surface2); color: var(--text); }
+  .sidebar a.active { color: var(--tier-found); background: var(--tier-found-bg); }
+
+  /* Mobile TOC toggle */
+  .toc-toggle {
+    display: none;
+    position: fixed; bottom: 24px; right: 24px;
+    width: 48px; height: 48px;
+    border-radius: 50%; border: 1px solid var(--border-light);
+    background: var(--surface); color: var(--text);
+    font-size: 20px; cursor: pointer; z-index: 200;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .toc-mobile-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 150;
+  }
+  .toc-mobile-overlay.open { display: block; }
+  .toc-mobile-panel {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-height: 65vh; overflow-y: auto;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+    border-radius: 18px 18px 0 0;
+    padding: 24px 20px 32px;
+    z-index: 200;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  .toc-mobile-panel.open { display: block; transform: translateY(0); }
+
+  /* ── Main content ────────────────────────────────────── */
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 0 36px 80px;
+  }
+
+  /* ── Hero ─────────────────────────────────────────────── */
+  .hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .hero-icon {
+    font-size: 44px; margin-bottom: 16px;
+    display: inline-block;
+  }
+  .hero h1 {
+    font-size: 36px; font-weight: 700;
+    letter-spacing: -0.03em; margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .tier-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 8px;
+    background: rgba(245,158,11,0.10);
+    color: var(--tier-found);
+    border: 1px solid var(--tier-found-border);
+    margin-bottom: 16px;
+  }
+  .hero .subtitle {
+    font-size: 16px; color: var(--text-dim);
+    line-height: 1.65; max-width: 600px;
+  }
+
+  /* ── Section styling ─────────────────────────────────── */
+  .section {
+    margin-bottom: 56px;
+    scroll-margin-top: 80px;
+  }
+  .section h2 {
+    font-size: 24px; font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .section h3 {
+    font-size: 18px; font-weight: 600;
+    margin: 28px 0 14px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .section p {
+    font-size: 15px; line-height: 1.75;
+    color: var(--text-dim); margin-bottom: 14px;
+  }
+  .section ul, .section ol {
+    padding-left: 20px; margin-bottom: 16px;
+  }
+  .section li {
+    font-size: 15px; line-height: 1.75;
+    color: var(--text-dim); margin-bottom: 6px;
+  }
+  .section li strong { color: var(--text); }
+
+  /* ── Info cards (for step-by-step) ────────────────────── */
+  .step-cards {
+    display: flex; flex-direction: column; gap: 10px;
+    margin: 16px 0 24px;
+  }
+  .step-card {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+  .step-card:hover { border-color: var(--border-light); }
+  .step-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(245,158,11,0.10);
+    color: var(--tier-found);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--tier-found-border);
+  }
+  .step-card p { margin: 0; font-size: 14px; }
+
+  /* ── Code blocks ─────────────────────────────────────── */
+  .code-block-wrapper {
+    position: relative;
+    margin: 16px 0 24px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-muted);
+  }
+  .copy-btn {
+    background: none; border: 1px solid var(--border-light);
+    color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 3px 10px; border-radius: 5px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .copy-btn:hover {
+    background: var(--surface2); color: var(--text);
+    border-color: var(--text-muted);
+  }
+  .code-block-wrapper pre {
+    margin: 0; padding: 18px 20px;
+    background: var(--bg);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .code-block-wrapper code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.7;
+    color: var(--text);
+  }
+  .code-block-wrapper code .comment {
+    color: var(--text-muted);
+  }
+  .code-block-wrapper code .cmd {
+    color: var(--tier-found);
+  }
+  .code-block-wrapper code .flag {
+    color: var(--tier-core);
+  }
+  .code-block-wrapper code .str {
+    color: var(--tier-adv);
+  }
+
+  /* Inline code */
+  .content :not(pre) > code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    color: var(--tier-found);
+  }
+
+  /* ── Checklist ───────────────────────────────────────── */
+  .checklist {
+    list-style: none; padding: 0; margin: 16px 0 24px;
+  }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .checklist li:hover { border-color: var(--border-light); }
+  .check-icon {
+    flex-shrink: 0; margin-top: 2px;
+    width: 20px; height: 20px; border-radius: 6px;
+    background: rgba(16,185,129,0.10);
+    border: 1px solid rgba(16,185,129,0.25);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--tier-adv); font-size: 12px;
+  }
+
+  /* ── Branching strategy cards ────────────────────────── */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 14px;
+    margin: 16px 0 24px;
+  }
+  .strategy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .strategy-card:hover { border-color: var(--border-light); }
+  .strategy-card h4 {
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 8px; color: var(--text);
+  }
+  .strategy-card p {
+    font-size: 13px; color: var(--text-dim);
+    line-height: 1.6; margin: 0;
+  }
+  .strategy-card .branches {
+    margin-top: 10px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .strategy-card .branch-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 3px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border-light);
+    border-radius: 5px; color: var(--text-dim);
+  }
+
+  /* ── Resources ───────────────────────────────────────── */
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    transition: border-color 0.2s, background 0.2s;
+    display: block;
+    text-decoration: none;
+  }
+  .resource-card:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+  }
+  .resource-card .res-title {
+    font-size: 14px; font-weight: 600;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .resource-card .res-desc {
+    font-size: 12px; color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── Footer nav ──────────────────────────────────────── */
+  .footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 16px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    margin-top: 56px;
+  }
+  .footer-link {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 20px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .footer-link:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+  }
+  .footer-link.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .footer-link .fl-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .footer-link .fl-title {
+    font-size: 15px; font-weight: 600; color: var(--text);
+  }
+  .footer-link.disabled .fl-title { color: var(--text-muted); }
+  .footer-link.next { text-align: right; }
+
+  /* ── Responsive ──────────────────────────────────────── */
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .toc-toggle { display: flex; }
+    .content { padding: 0 20px 80px; }
+    .hero h1 { font-size: 28px; }
+    .strategy-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .top-nav { padding: 0 16px; }
+    .top-nav .brand { font-size: 13px; }
+    .content { padding: 0 14px 80px; }
+    .hero { padding: 36px 0 28px; }
+    .hero h1 { font-size: 24px; }
+    .hero .subtitle { font-size: 14px; }
+    .section h2 { font-size: 20px; }
+    .footer-nav { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- ── Top Navigation ──────────────────────────────────── -->
+<nav class="top-nav">
+  <span class="brand">DevOps Easy Learning</span>
+  <a href="../index.html" class="back-link">&#8592; Back to Roadmap</a>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── Sidebar / Table of Contents ───────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-title">On this page</div>
+    <ul>
+      <li><a href="#what-is-git">What is Git?</a></li>
+      <li><a href="#what-is-github">What is GitHub?</a></li>
+      <li><a href="#setting-up">Setting Up Accounts</a></li>
+      <li><a href="#ssh-keys">SSH Keys</a></li>
+      <li><a href="#personal-access-tokens">Access Tokens</a></li>
+      <li><a href="#git-fundamentals">Git Fundamentals</a></li>
+      <li><a href="#branching-merging">Branching &amp; Merging</a></li>
+      <li><a href="#pull-requests">Pull Requests</a></li>
+      <li><a href="#best-practices">Best Practices</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── Main Content ──────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-icon">&#x1F500;</div>
+      <h1>Git &amp; Version Control</h1>
+      <div class="tier-badge">Tier 1 &middot; Foundations</div>
+      <p class="subtitle">Branching, merging, workflows &mdash; the backbone of modern software development.</p>
+    </header>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 1: What is Git? -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="what-is-git" class="section">
+      <h2>What is Git?</h2>
+      <p>Git is a <strong>DevOps tool</strong> used for source code management. It is a free, open-source <strong>distributed version control system</strong> that tracks changes in any set of files, enabling multiple developers to work together on a project without overwriting each other's contributions.</p>
+      <p>Created by <strong>Linus Torvalds</strong> in 2005 for managing the development of the Linux kernel, Git has become the standard version control system used across the software industry.</p>
+
+      <h3>Key Concepts</h3>
+      <ul>
+        <li><strong>Repository (repo)</strong> &mdash; A project folder tracked by Git, containing all files and their complete history of changes.</li>
+        <li><strong>Commit</strong> &mdash; A snapshot of your changes at a point in time, with a descriptive message explaining what was changed and why.</li>
+        <li><strong>Branch</strong> &mdash; An independent line of development that lets you work on features or fixes without affecting the main codebase.</li>
+        <li><strong>Merge</strong> &mdash; The process of integrating changes from one branch into another.</li>
+      </ul>
+
+      <h3>Why Git Matters for DevOps</h3>
+      <p>In a DevOps world, <em>everything</em> is version-controlled &mdash; not just application code, but also infrastructure definitions (IaC), CI/CD pipeline configurations, documentation, and operational scripts. Git is the single source of truth that makes collaboration, automation, and auditability possible.</p>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 2: What is GitHub? -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="what-is-github" class="section">
+      <h2>What is GitHub?</h2>
+      <p>GitHub is an <strong>online software development platform</strong> used for storing, tracking, and collaborating on software projects. It hosts Git repositories in the cloud and layers on powerful collaboration features such as pull requests, issues, project boards, and GitHub Actions for CI/CD.</p>
+
+      <h3>Git vs GitHub</h3>
+      <p><strong>Git</strong> is the version control tool that runs on your local machine. <strong>GitHub</strong> is a hosting platform that adds collaboration features on top of Git. You can use Git without GitHub, but GitHub needs Git to function.</p>
+
+      <h3>Other Platforms</h3>
+      <ul>
+        <li><strong>GitLab</strong> &mdash; An all-in-one DevOps platform with built-in CI/CD, container registry, and more.</li>
+        <li><strong>Bitbucket</strong> &mdash; Atlassian&rsquo;s Git hosting service, integrates tightly with Jira and Trello.</li>
+        <li><strong>Azure DevOps</strong> &mdash; Microsoft&rsquo;s platform combining repos, pipelines, boards, and artifacts.</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 3: Setting Up Accounts -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="setting-up" class="section">
+      <h2>Setting Up &mdash; Opening Accounts</h2>
+      <p>Before you start working with Git, you need an account on a hosting platform. Here&rsquo;s how to get started:</p>
+
+      <h3>GitHub</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p>Go to <a href="https://github.com" target="_blank" rel="noopener">github.com</a></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p>Click <strong>"Sign up"</strong> in the top-right corner</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p>Follow the registration instructions &mdash; enter your email, create a password, and choose a username</p>
+        </div>
+      </div>
+
+      <h3>GitLab</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p>Go to <a href="https://gitlab.com" target="_blank" rel="noopener">gitlab.com</a></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p>Click <strong>"Register"</strong> and sign up with your email, or use your Google, GitHub, or Bitbucket account</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 4: SSH Keys -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="ssh-keys" class="section">
+      <h2>SSH Keys</h2>
+      <p>SSH keys allow you to authenticate with GitHub (or GitLab) securely without entering your username and password each time you push or pull.</p>
+
+      <h3>How to Add an SSH Key to GitHub</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p>Open your terminal</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div>
+            <p>Run the following command to display your public key:</p>
+            <div class="code-block-wrapper" style="margin-top:10px; margin-bottom:0;">
+              <div class="code-block-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>cat ~/.ssh/id_rsa.pub</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p>Copy the entire contents of the output to your clipboard</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p>Log in to your <a href="https://github.com" target="_blank" rel="noopener">GitHub</a> account</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p>Click on the drop-down menu (your profile icon in the top-right) &rarr; <strong>Settings</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <p>Navigate to <strong>"SSH and GPG keys"</strong> in the left sidebar</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">7</div>
+          <p>Click <strong>"New SSH key"</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">8</div>
+          <p>Enter a descriptive name in the <strong>Title</strong> field (e.g., "Work Laptop")</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">9</div>
+          <p>Paste your key in the <strong>Key</strong> field</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">10</div>
+          <p>Click <strong>"Add SSH key"</strong></p>
+        </div>
+      </div>
+
+      <h3>How to Generate an SSH Key</h3>
+      <p>If you don't have an SSH key yet, generate one with the following command:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com"</code></pre>
+      </div>
+      <p>Follow the prompts to choose a file location (press Enter for the default) and optionally set a passphrase. Your key pair will be saved to <code>~/.ssh/</code>.</p>
+
+      <h3>How to Delete an SSH Key</h3>
+      <p>To remove an SSH key from your GitHub account, go to <strong>Settings &rarr; SSH and GPG keys</strong> and click <strong>"Delete"</strong> next to the key you want to remove.</p>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 5: Personal Access Tokens -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="personal-access-tokens" class="section">
+      <h2>Personal Access Tokens</h2>
+      <p>Personal access tokens (PATs) are an alternative to SSH keys for authenticating with GitHub, especially useful for HTTPS-based operations and API access.</p>
+
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p>Log in to your <a href="https://github.com" target="_blank" rel="noopener">GitHub</a> account</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p>Click on the drop-down menu (profile icon) &rarr; <strong>Settings</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p>Scroll down to <strong>"Developer settings"</strong> at the bottom of the left sidebar</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p>Click <strong>"Personal access tokens"</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p>Choose between <strong>"Fine-grained tokens"</strong> (recommended) or <strong>"Tokens (classic)"</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <p>Click <strong>"Generate new token"</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">7</div>
+          <p>You may be asked to confirm access &mdash; enter your password if prompted</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">8</div>
+          <p>Configure a <strong>token name</strong>, <strong>expiration date</strong>, and select the required <strong>permissions / scopes</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">9</div>
+          <p><strong>Copy and save the token immediately</strong> &mdash; you won&rsquo;t be able to see it again!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 6: Git Fundamentals -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="git-fundamentals" class="section">
+      <h2>Git Fundamentals</h2>
+      <p>These are the core commands you will use every day. Understanding them is essential before moving on to branching strategies and collaboration workflows.</p>
+
+      <div class="code-block-wrapper">
+        <div class="code-block-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="comment"># Initialize a new repository</span>
+<span class="cmd">git init</span>
+
+<span class="comment"># Clone an existing repository</span>
+<span class="cmd">git clone</span> <span class="flag">&lt;url&gt;</span>
+
+<span class="comment"># Check the status of your working directory</span>
+<span class="cmd">git status</span>
+
+<span class="comment"># Stage changes for commit</span>
+<span class="cmd">git add</span> <span class="flag">&lt;file&gt;</span>        <span class="comment"># Stage a specific file</span>
+<span class="cmd">git add</span> <span class="flag">.</span>             <span class="comment"># Stage all changes</span>
+
+<span class="comment"># Commit staged changes</span>
+<span class="cmd">git commit</span> <span class="flag">-m</span> <span class="str">"Your commit message"</span>
+
+<span class="comment"># Push changes to remote</span>
+<span class="cmd">git push</span> <span class="flag">origin</span> <span class="str">&lt;branch&gt;</span>
+
+<span class="comment"># Pull latest changes from remote</span>
+<span class="cmd">git pull</span> <span class="flag">origin</span> <span class="str">&lt;branch&gt;</span></code></pre>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 7: Branching & Merging -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="branching-merging" class="section">
+      <h2>Branching &amp; Merging</h2>
+      <p>A <strong>branch</strong> is an independent line of development. Branches let you work on features, bug fixes, or experiments in isolation without affecting the main codebase.</p>
+
+      <h3>Branch Commands</h3>
+      <div class="code-block-wrapper">
+        <div class="code-block-header"><span>bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="comment"># Create and switch to a new branch</span>
+<span class="cmd">git checkout</span> <span class="flag">-b</span> <span class="str">feature/my-feature</span>
+
+<span class="comment"># List all branches</span>
+<span class="cmd">git branch</span> <span class="flag">-a</span>
+
+<span class="comment"># Switch branches</span>
+<span class="cmd">git checkout</span> <span class="str">main</span>
+
+<span class="comment"># Merge a branch into current branch</span>
+<span class="cmd">git merge</span> <span class="str">feature/my-feature</span>
+
+<span class="comment"># Delete a branch</span>
+<span class="cmd">git branch</span> <span class="flag">-d</span> <span class="str">feature/my-feature</span></code></pre>
+      </div>
+
+      <h3>Branching Strategies</h3>
+      <div class="strategy-grid">
+        <div class="strategy-card">
+          <h4>Gitflow</h4>
+          <p>A structured model with dedicated branches for features, releases, and hotfixes. Best for projects with scheduled releases.</p>
+          <div class="branches">
+            <span class="branch-tag">main</span>
+            <span class="branch-tag">develop</span>
+            <span class="branch-tag">feature/*</span>
+            <span class="branch-tag">release/*</span>
+            <span class="branch-tag">hotfix/*</span>
+          </div>
+        </div>
+        <div class="strategy-card">
+          <h4>Trunk-Based Development</h4>
+          <p>Short-lived feature branches merged frequently into <code>main</code>. Encourages continuous integration and reduces merge conflicts.</p>
+          <div class="branches">
+            <span class="branch-tag">main</span>
+            <span class="branch-tag">short-lived branches</span>
+          </div>
+        </div>
+        <div class="strategy-card">
+          <h4>GitHub Flow</h4>
+          <p>A simple, lightweight model: <code>main</code> plus feature branches with pull requests. Ideal for continuous deployment.</p>
+          <div class="branches">
+            <span class="branch-tag">main</span>
+            <span class="branch-tag">feature branches</span>
+            <span class="branch-tag">pull requests</span>
+          </div>
+        </div>
+      </div>
+
+      <h3>Rebasing vs Merging</h3>
+      <p><strong>Merge</strong> preserves the full history by creating a merge commit that ties two branches together. It shows exactly when branches diverged and converged.</p>
+      <p><strong>Rebase</strong> rewrites the commit history by replaying your changes on top of the target branch, producing a clean, linear log. While this makes the history easier to read, it should never be used on shared/public branches since it rewrites commits other people may depend on.</p>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 8: Pull Requests & Code Review -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="pull-requests" class="section">
+      <h2>Pull Requests &amp; Code Review</h2>
+      <p>A <strong>pull request (PR)</strong> is a proposal to merge changes from one branch into another. It is the primary mechanism for code review and collaboration in modern software development.</p>
+
+      <h3>PR Workflow</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p>Create a new branch from <code>main</code></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p>Make your changes and commit them</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p>Push the branch to the remote repository</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p>Open a pull request on GitHub (or your platform of choice)</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p>Team members review the code, leave comments, and suggest changes</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <p>Address feedback, push additional commits if needed</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">7</div>
+          <p>Once approved, merge the pull request into <code>main</code></p>
+        </div>
+      </div>
+
+      <h3>Code Review Best Practices</h3>
+      <ul>
+        <li><strong>Review for logic, not style</strong> &mdash; Use linters and formatters to handle style; focus your review on correctness, security, and maintainability.</li>
+        <li><strong>Be constructive</strong> &mdash; Suggest improvements rather than simply pointing out problems. Explain <em>why</em> something should change.</li>
+        <li><strong>Approve or request changes</strong> &mdash; Don&rsquo;t leave a review in limbo. Either approve, request specific changes, or leave a comment.</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 9: Best Practices -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="best-practices" class="section">
+      <h2>Best Practices</h2>
+      <p>Follow these guidelines to keep your repositories clean, your team productive, and your secrets safe.</p>
+
+      <ul class="checklist">
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Use <code>.gitignore</code></strong> &mdash; Never commit secrets, credentials, <code>node_modules</code>, build artifacts, or OS-specific files. Create a <code>.gitignore</code> at the root of every repo.</div>
+        </li>
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Write meaningful commit messages</strong> &mdash; Describe <em>what</em> changed and <em>why</em>, not just what files were touched. Good messages make debugging and auditing much easier.</div>
+        </li>
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Keep commits small and focused</strong> &mdash; Each commit should represent one logical change. This makes reviews simpler and reverts safer.</div>
+        </li>
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Use branch protection rules</strong> &mdash; Require code reviews and passing CI checks before merging to <code>main</code>. This prevents accidental breakage.</div>
+        </li>
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Never commit secrets</strong> &mdash; Use environment variables, secret managers (e.g., HashiCorp Vault, AWS Secrets Manager), or <code>.env</code> files that are git-ignored.</div>
+        </li>
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Pull before push</strong> &mdash; Always run <code>git pull</code> before <code>git push</code> to incorporate remote changes and avoid unnecessary merge conflicts.</div>
+        </li>
+        <li>
+          <span class="check-icon">&#10003;</span>
+          <div><strong>Tag releases</strong> &mdash; Use semantic versioning (<code>v1.0.0</code>, <code>v1.1.0</code>, etc.) to mark release points. Tags provide clear reference points in your project history.</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Resources -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="resources" class="section">
+      <h2>Resources</h2>
+      <p>Deepen your understanding with these recommended learning materials:</p>
+
+      <div class="resources-grid">
+        <a class="resource-card" href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener">
+          <div class="res-title">Pro Git Book</div>
+          <div class="res-desc">The complete, free reference book covering everything from basics to internals.</div>
+        </a>
+        <a class="resource-card" href="https://learngitbranching.js.org/" target="_blank" rel="noopener">
+          <div class="res-title">Learn Git Branching</div>
+          <div class="res-desc">An interactive, visual tutorial that teaches branching and merging through hands-on challenges.</div>
+        </a>
+        <a class="resource-card" href="https://skills.github.com/" target="_blank" rel="noopener">
+          <div class="res-title">GitHub Skills</div>
+          <div class="res-desc">Official GitHub courses that walk you through real workflows using actual repositories.</div>
+        </a>
+        <a class="resource-card" href="https://git-scm.com/doc" target="_blank" rel="noopener">
+          <div class="res-title">Git Documentation</div>
+          <div class="res-desc">The official reference manual and man pages for every Git command.</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── Footer Navigation ──────────────────────────── -->
+    <nav class="footer-nav">
+      <a href="what-is-devops.html" class="footer-link prev">
+        <span class="fl-label">&larr; Previous</span>
+        <span class="fl-title">What is DevOps?</span>
+      </a>
+      <div class="footer-link next disabled">
+        <span class="fl-label">Next &rarr;</span>
+        <span class="fl-title">Linux &amp; OS (coming soon)</span>
+      </div>
+    </nav>
+
+  </main>
+</div>
+
+<!-- ── Mobile TOC ──────────────────────────────────────── -->
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-mobile-overlay" id="tocOverlay"></div>
+<div class="toc-mobile-panel" id="tocPanel">
+  <div class="sidebar-title">On this page</div>
+  <ul style="list-style:none;">
+    <li><a href="#what-is-git" onclick="closeToc()">What is Git?</a></li>
+    <li><a href="#what-is-github" onclick="closeToc()">What is GitHub?</a></li>
+    <li><a href="#setting-up" onclick="closeToc()">Setting Up Accounts</a></li>
+    <li><a href="#ssh-keys" onclick="closeToc()">SSH Keys</a></li>
+    <li><a href="#personal-access-tokens" onclick="closeToc()">Access Tokens</a></li>
+    <li><a href="#git-fundamentals" onclick="closeToc()">Git Fundamentals</a></li>
+    <li><a href="#branching-merging" onclick="closeToc()">Branching &amp; Merging</a></li>
+    <li><a href="#pull-requests" onclick="closeToc()">Pull Requests</a></li>
+    <li><a href="#best-practices" onclick="closeToc()">Best Practices</a></li>
+    <li><a href="#resources" onclick="closeToc()">Resources</a></li>
+  </ul>
+</div>
+
+<script>
+  // ── Copy code button ────────────────────────────────
+  function copyCode(btn) {
+    const code = btn.closest('.code-block-wrapper').querySelector('code');
+    const text = code.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1800);
+    });
+  }
+
+  // ── Mobile TOC ──────────────────────────────────────
+  const tocToggle  = document.getElementById('tocToggle');
+  const tocOverlay = document.getElementById('tocOverlay');
+  const tocPanel   = document.getElementById('tocPanel');
+
+  function openToc() {
+    tocOverlay.classList.add('open');
+    tocPanel.classList.add('open');
+  }
+  function closeToc() {
+    tocOverlay.classList.remove('open');
+    tocPanel.classList.remove('open');
+  }
+  tocToggle.addEventListener('click', () => {
+    tocPanel.classList.contains('open') ? closeToc() : openToc();
+  });
+  tocOverlay.addEventListener('click', closeToc);
+
+  // ── Active sidebar link on scroll ───────────────────
+  const sections = document.querySelectorAll('.section');
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+  function updateActive() {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top;
+      if (top <= 120) current = sec.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+</script>
+</body>
+</html>

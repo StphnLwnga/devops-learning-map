@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>What is DevOps? — DevOps Easy Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/shared.css"/>
+<style>
+  /* ───── Nav ───── */
+  .top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: 56px;
+    background: rgba(12, 12, 14, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+  }
+
+  .nav-brand {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .nav-brand span {
+    color: var(--tier-core);
+  }
+
+  .nav-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .nav-back:hover {
+    color: var(--text);
+    border-color: var(--border-light);
+    background: var(--surface);
+  }
+
+  /* ───── Hero ───── */
+  .hero {
+    padding: 120px 28px 64px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 56px; left: 0; right: 0;
+    height: 280px;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tier-core);
+    background: var(--tier-core-bg);
+    border: 1px solid var(--tier-core-border);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 17px;
+    color: var(--text-dim);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  /* ───── Layout ───── */
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 28px 80px;
+  }
+
+  /* ───── Table of Contents ───── */
+  .toc-sidebar {
+    position: sticky;
+    top: 80px;
+    align-self: start;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    padding-left: 14px;
+  }
+
+  .toc-list {
+    list-style: none;
+  }
+
+  .toc-list li {
+    margin-bottom: 2px;
+  }
+
+  .toc-list a {
+    display: block;
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 6px 14px;
+    border-radius: 6px;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+    line-height: 1.45;
+  }
+
+  .toc-list a:hover {
+    color: var(--text);
+    background: var(--surface);
+    border-left-color: var(--tier-core);
+  }
+
+  /* Mobile TOC toggle */
+  .toc-toggle {
+    display: none;
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .toc-toggle:hover {
+    border-color: var(--border-light);
+  }
+
+  .toc-toggle::after {
+    content: '\25BC';
+    float: right;
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.3s;
+  }
+
+  .toc-toggle.open::after {
+    transform: rotate(180deg);
+  }
+
+  /* ───── Content ───── */
+  .content {
+    min-width: 0;
+  }
+
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tier-core);
+    margin-bottom: 8px;
+  }
+
+  .section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    line-height: 1.3;
+  }
+
+  .section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    margin-top: 28px;
+    color: var(--text);
+  }
+
+  .section p {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin-bottom: 14px;
+  }
+
+  .section ul, .section ol {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+
+  .section li {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin-bottom: 6px;
+  }
+
+  .section li strong {
+    color: var(--text);
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-left: 3px solid var(--tier-core);
+  }
+
+  .highlight-box p {
+    margin-bottom: 0;
+  }
+
+  .highlight-box.warning {
+    border-left-color: var(--tier-found);
+  }
+
+  .highlight-box.success {
+    border-left-color: var(--tier-adv);
+  }
+
+  /* Equation-style display */
+  .equation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 28px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  .equation-term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--tier-core);
+    padding: 10px 22px;
+    background: var(--tier-core-bg);
+    border: 1px solid var(--tier-core-border);
+    border-radius: 10px;
+  }
+
+  .equation-op {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .equation-result {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--tier-adv);
+    padding: 10px 22px;
+    background: var(--tier-adv-bg);
+    border: 1px solid var(--tier-adv-border);
+    border-radius: 10px;
+  }
+
+  /* Team/colleague list */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .team-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+    transition: border-color 0.2s;
+  }
+
+  .team-item:hover {
+    border-color: var(--border-light);
+  }
+
+  .team-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Process cards */
+  .process-cards {
+    display: grid;
+    gap: 16px;
+  }
+
+  .process-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .process-card:hover {
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+  }
+
+  .process-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--tier-core), var(--tier-adv));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .process-card:hover::before {
+    opacity: 1;
+  }
+
+  .process-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--tier-core);
+    background: var(--tier-core-bg);
+    border: 1px solid var(--tier-core-border);
+    padding: 3px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+
+  .process-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .process-card .definition {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .process-card .example {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border-left: 2px solid var(--tier-found);
+  }
+
+  .process-card .example strong {
+    color: var(--tier-found);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Tooling grid */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .tool-card:hover {
+    border-color: var(--border-light);
+    transform: translateY(-1px);
+  }
+
+  .tool-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+
+  .tool-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tool-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tool-card:hover .tool-tag {
+    border-color: var(--border-light);
+  }
+
+  /* DORA Metric cards */
+  .dora-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  .dora-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .dora-card:hover {
+    border-color: var(--tier-adv-border);
+    transform: translateY(-2px);
+  }
+
+  .dora-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .dora-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .dora-card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin-bottom: 0;
+  }
+
+  /* Environment flow */
+  .env-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 28px 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .env-stage {
+    flex: 1;
+    min-width: 160px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+
+  .env-stage:first-child {
+    border-radius: 12px 0 0 12px;
+  }
+
+  .env-stage:last-child {
+    border-radius: 0 12px 12px 0;
+  }
+
+  .env-stage + .env-stage {
+    border-left: none;
+  }
+
+  .env-stage.lower {
+    background: var(--tier-found-bg);
+    border-color: var(--tier-found-border);
+  }
+
+  .env-stage.lower + .env-stage.lower {
+    border-left: none;
+  }
+
+  .env-stage.upper {
+    background: var(--tier-adv-bg);
+    border-color: var(--tier-adv-border);
+  }
+
+  .env-stage.upper + .env-stage.upper {
+    border-left: none;
+  }
+
+  .env-stage h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .env-stage .env-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  .env-stage.lower .env-label {
+    color: var(--tier-found);
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .env-stage.upper .env-label {
+    color: var(--tier-adv);
+    background: rgba(16, 185, 129, 0.12);
+  }
+
+  .env-stage .env-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+
+  .env-stage .env-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    word-break: break-all;
+  }
+
+  .env-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: var(--text-muted);
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* Flow rows */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .flow-row .flow-item {
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .flow-row .flow-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* Comparison table */
+  .comparison-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.55;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comparison-table th {
+    background: var(--surface2);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .comparison-table th:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    width: 160px;
+  }
+
+  .comparison-table td {
+    color: var(--text-dim);
+  }
+
+  .comparison-table td:first-child {
+    font-weight: 600;
+    color: var(--text);
+    background: var(--surface);
+  }
+
+  .comparison-table tr:last-child td,
+  .comparison-table tr:last-child th {
+    border-bottom: none;
+  }
+
+  .comparison-table tr:hover td {
+    background: var(--surface);
+  }
+
+  .comparison-table tr:hover td:first-child {
+    background: var(--surface2);
+  }
+
+  .comparison-table .col-preprod {
+    border-right: 1px solid var(--border);
+  }
+
+  /* Versioning lifecycle */
+  .lifecycle-track {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 0;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  .version-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    border: 1px solid;
+  }
+
+  .version-badge.dev {
+    color: var(--tier-found);
+    background: var(--tier-found-bg);
+    border-color: var(--tier-found-border);
+  }
+
+  .version-badge.qa {
+    color: #EAB308;
+    background: rgba(234, 179, 8, 0.06);
+    border-color: rgba(234, 179, 8, 0.15);
+  }
+
+  .version-badge.preprod {
+    color: var(--tier-core);
+    background: var(--tier-core-bg);
+    border-color: var(--tier-core-border);
+  }
+
+  .version-badge.prod {
+    color: var(--tier-adv);
+    background: var(--tier-adv-bg);
+    border-color: var(--tier-adv-border);
+  }
+
+  .lifecycle-arrow {
+    color: var(--text-muted);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Deploy vs Release */
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .vs-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+
+  .vs-card:hover {
+    border-color: var(--border-light);
+  }
+
+  .vs-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .vs-card.deploy { border-top: 3px solid var(--tier-core); }
+  .vs-card.release { border-top: 3px solid var(--tier-adv); }
+
+  .vs-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  .vs-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .vs-card.deploy .vs-badge {
+    color: var(--tier-core);
+    background: var(--tier-core-bg);
+    border: 1px solid var(--tier-core-border);
+  }
+
+  .vs-card.release .vs-badge {
+    color: var(--tier-adv);
+    background: var(--tier-adv-bg);
+    border: 1px solid var(--tier-adv-border);
+  }
+
+  /* Resources */
+  .resources-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .resources-list li {
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-dim);
+    transition: border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .resources-list li:hover {
+    border-color: var(--border-light);
+  }
+
+  .resource-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .resource-title {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .resource-author {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* Footer nav */
+  .footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-top: 40px;
+    transition: border-color 0.2s;
+  }
+
+  .footer-nav:hover {
+    border-color: var(--border-light);
+  }
+
+  .footer-nav-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .footer-nav-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tier-core);
+    transition: color 0.2s;
+  }
+
+  .footer-nav:hover .footer-nav-title {
+    color: #818CF8;
+  }
+
+  .footer-nav-arrow {
+    font-size: 24px;
+    color: var(--text-muted);
+  }
+
+  /* Page footer */
+  .page-footer {
+    text-align: center;
+    padding: 40px 28px;
+    font-size: 13px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  /* ───── Responsive ───── */
+  @media (max-width: 860px) {
+    .page-wrapper {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .toc-sidebar {
+      position: relative;
+      top: 0;
+      max-height: none;
+      margin-bottom: 32px;
+    }
+
+    .toc-toggle {
+      display: block;
+    }
+
+    .toc-list {
+      display: none;
+      padding-top: 8px;
+    }
+
+    .toc-list.open {
+      display: block;
+    }
+
+    .toc-title {
+      display: none;
+    }
+
+    .vs-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .env-flow {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .env-stage {
+      border-radius: 0 !important;
+    }
+
+    .env-stage:first-child {
+      border-radius: 12px 12px 0 0 !important;
+    }
+
+    .env-stage:last-child {
+      border-radius: 0 0 12px 12px !important;
+    }
+
+    .env-stage + .env-stage {
+      border-left: 1px solid var(--border);
+      border-top: none;
+    }
+
+    .env-stage.lower + .env-stage.lower {
+      border-left: 1px solid var(--tier-found-border);
+    }
+
+    .env-stage.upper + .env-stage.upper {
+      border-left: 1px solid var(--tier-adv-border);
+    }
+
+    .env-arrow {
+      justify-content: center;
+      transform: rotate(90deg);
+      padding: 4px 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .hero {
+      padding: 100px 20px 48px;
+    }
+
+    .page-wrapper {
+      padding: 0 16px 60px;
+    }
+
+    .tool-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dora-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .equation {
+      gap: 10px;
+      padding: 20px 16px;
+    }
+
+    .equation-term, .equation-result {
+      font-size: 16px;
+      padding: 8px 16px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Noise overlay -->
+<div class="noise"></div>
+
+<!-- ═══════ Top Navigation ═══════ -->
+<nav class="top-nav">
+  <div class="nav-brand">DevOps <span>Easy Learning</span></div>
+  <a href="../index.html" class="nav-back">Back to Roadmap</a>
+</nav>
+
+<!-- ═══════ Hero Section ═══════ -->
+<section class="hero">
+  <div class="hero-badge">Foundation</div>
+  <h1>What is DevOps?</h1>
+  <p>A comprehensive introduction to DevOps culture, processes, and tooling</p>
+</section>
+
+<!-- ═══════ Page Layout ═══════ -->
+<div class="page-wrapper">
+
+  <!-- ── Table of Contents (Sidebar) ── -->
+  <aside class="toc-sidebar">
+    <button class="toc-toggle" id="toc-toggle-btn">
+      Table of Contents
+    </button>
+    <div class="toc-title">On This Page</div>
+    <ul class="toc-list">
+      <li><a href="#what-is-devops">What is DevOps?</a></li>
+      <li><a href="#what-is-dev">What is DEV?</a></li>
+      <li><a href="#what-is-ops">What is OPS?</a></li>
+      <li><a href="#devops-culture">DevOps Culture</a></li>
+      <li><a href="#devops-process">The DevOps Process</a></li>
+      <li><a href="#devops-tooling">DevOps Tooling</a></li>
+      <li><a href="#dora-metrics">DORA Metrics</a></li>
+      <li><a href="#environments">Environment Classification</a></li>
+      <li><a href="#preprod-vs-prod">PreProd vs Prod</a></li>
+      <li><a href="#deploy-vs-release">Deployment vs Release</a></li>
+      <li><a href="#software-lifecycle">Software Lifecycle</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main class="content">
+
+    <!-- Section 1: What is DevOps? -->
+    <section class="section" id="what-is-devops">
+      <div class="section-label">Section 01</div>
+      <h2>What is DevOps?</h2>
+
+      <div class="equation">
+        <span class="equation-term">DEV</span>
+        <span class="equation-op">+</span>
+        <span class="equation-term">OPS</span>
+        <span class="equation-op">=</span>
+        <span class="equation-result">DevOps</span>
+      </div>
+
+      <p><strong>DevOps</strong> is a combination of <strong>Development (DEV)</strong> and <strong>Operations (OPS)</strong>. It is a culture and set of practices that bridges the gap between Development and Operations teams to improve and better control the <strong>software development life cycle (SDLC)</strong>.</p>
+
+      <div class="highlight-box">
+        <p>DevOps engineers sit in the <strong style="color: var(--tier-core);">middle of all SDLC teams</strong> and provide tools, automation, and processes that enable those teams to deliver software faster, more reliably, and with greater collaboration.</p>
+      </div>
+    </section>
+
+    <!-- Section 2: What is DEV? -->
+    <section class="section" id="what-is-dev">
+      <div class="section-label">Section 02</div>
+      <h2>What is DEV?</h2>
+
+      <p><strong>DEV</strong> stands for <strong>Application Development</strong>. An application is a program, or set of programs, that allows end-users to perform particular functions.</p>
+
+      <p>In simpler terms, applications are the tools we use every day:</p>
+
+      <ul>
+        <li><strong>Facebook</strong> and <strong>WhatsApp</strong> for communication and social media</li>
+        <li><strong>Banking apps</strong> for managing finances</li>
+        <li><strong>DoorDash</strong> for ordering food</li>
+        <li><strong>Gmail</strong>, <strong>Yahoo</strong>, and <strong>Outlook</strong> for email</li>
+      </ul>
+
+      <div class="highlight-box warning">
+        <p><strong style="color: var(--tier-found);">Important distinction:</strong> DevOps does <em>not</em> develop applications &mdash; developers do that. DevOps engineers are <em>not</em> developers. They work on the <strong>operations side</strong> of the software development life cycle.</p>
+      </div>
+    </section>
+
+    <!-- Section 3: What is OPS? -->
+    <section class="section" id="what-is-ops">
+      <div class="section-label">Section 03</div>
+      <h2>What is OPS?</h2>
+
+      <p><strong>OPS</strong> stands for <strong>Operations</strong>. Operations means transforming the code coming from developers into a fully working application that end-users can interact with.</p>
+
+      <p>DevOps engineers use a wide variety of tools, automation pipelines, and infrastructure management practices to accomplish this transformation. This includes building, testing, deploying, monitoring, and maintaining the application in production.</p>
+
+      <div class="highlight-box success">
+        <p>Think of it this way: Developers write the <strong>code</strong>. Operations teams transform that code into a <strong style="color: var(--tier-adv);">working, running, accessible application</strong>.</p>
+      </div>
+    </section>
+
+    <!-- Section 4: DevOps Culture -->
+    <section class="section" id="devops-culture">
+      <div class="section-label">Section 04</div>
+      <h2>DevOps Culture</h2>
+
+      <p>DevOps is fundamentally a <strong>cultural shift</strong> that breaks the gap between Development and Operations teams. DevOps engineers sit in the middle and provide tools, practices, and automation for all teams involved in the SDLC.</p>
+
+      <h3>Teams that DevOps supports</h3>
+      <div class="team-grid">
+        <div class="team-item">
+          <span class="team-dot" style="background: var(--tier-core);"></span>
+          Development Team (DEV)
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: var(--tier-found);"></span>
+          Quality Assurance (QA)
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: var(--tier-adv);"></span>
+          Network Team (IT)
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: #EF4444;"></span>
+          Security &amp; Infosec
+        </div>
+      </div>
+
+      <h3>DevOps engineer colleagues</h3>
+      <div class="team-grid">
+        <div class="team-item">
+          <span class="team-dot" style="background: var(--tier-core);"></span>
+          Developers
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: var(--tier-found);"></span>
+          Quality Engineers
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: var(--tier-adv);"></span>
+          Network Engineers
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: #EF4444;"></span>
+          Security Engineers
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: #8B5CF6;"></span>
+          IT Helpdesk
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: #EC4899;"></span>
+          Database Administrators
+        </div>
+        <div class="team-item">
+          <span class="team-dot" style="background: #F97316;"></span>
+          CyberSecurity Engineers
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: The DevOps Process -->
+    <section class="section" id="devops-process">
+      <div class="section-label">Section 05</div>
+      <h2>The DevOps Process</h2>
+
+      <p>The DevOps process is a continuous loop of activities that work together to deliver software rapidly and reliably. Each phase feeds into the next, creating an infinite feedback loop.</p>
+
+      <div class="process-cards">
+
+        <div class="process-card">
+          <span class="process-number">01</span>
+          <h4>Continuous Planning</h4>
+          <p class="definition">Continuously defining goals, tasks, and requirements throughout the project lifecycle. Teams collaborate to break down features into actionable work items.</p>
+          <div class="example">
+            <strong>Example:</strong> Team meets to discuss adding a discount feature to an e-commerce site, defining user stories and acceptance criteria.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">02</span>
+          <h4>Continuous Development</h4>
+          <p class="definition">Constantly writing, testing, and building code in small increments. Developers work in short cycles, committing code frequently to version control.</p>
+          <div class="example">
+            <strong>Example:</strong> Developers code the input field and discount calculation, testing each part individually before committing.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">03</span>
+          <h4>Continuous Integration (CI)</h4>
+          <p class="definition">Frequently merging code changes into a shared repository with automated testing. Every integration triggers an automated build and test sequence to catch issues early.</p>
+          <div class="example">
+            <strong>Example:</strong> Developer integrates the discount feature into the main codebase; automated tests check compatibility with existing features.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">04</span>
+          <h4>Continuous Code Inspection</h4>
+          <p class="definition">Reviewing code manually or with automated tools for bugs, security vulnerabilities, and overall code quality. Ensures adherence to coding standards and best practices.</p>
+          <div class="example">
+            <strong>Example:</strong> A team member spots a security issue in the discount code validation during a code review, preventing a potential exploit.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">05</span>
+          <h4>Continuous Testing</h4>
+          <p class="definition">Running automated tests at every stage to validate functionality, performance, and reliability. Includes unit tests, integration tests, end-to-end tests, and performance tests.</p>
+          <div class="example">
+            <strong>Example:</strong> Automated test suites run against the discount feature, verifying edge cases like expired codes, max usage limits, and concurrent usage.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">06</span>
+          <h4>Continuous Deployment</h4>
+          <p class="definition">Automatically deploying code to production after all tests pass. Every change that passes the pipeline reaches production without manual intervention.</p>
+          <div class="example">
+            <strong>Example:</strong> The discount feature is automatically deployed to the live website after all automated tests pass successfully.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">07</span>
+          <h4>Continuous Delivery (CD)</h4>
+          <p class="definition">Ensuring code is always in a deployable state, with a manual approval gate before production releases. Unlike Continuous Deployment, CD requires human sign-off for production pushes.</p>
+          <div class="example">
+            <strong>Example:</strong> The discount feature is ready for production but waits for the product manager's approval before going live.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">08</span>
+          <h4>Continuous Security</h4>
+          <p class="definition">Integrating security practices throughout the entire pipeline. Security is not a phase but a constant practice &mdash; often called &ldquo;shifting security left.&rdquo;</p>
+          <div class="example">
+            <strong>Example:</strong> Security scans automatically run on every commit, checking for dependency vulnerabilities and code-level security flaws.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">09</span>
+          <h4>Continuous Feedback</h4>
+          <p class="definition">Collecting feedback from users, stakeholders, and monitoring tools to inform development priorities and improvements.</p>
+          <div class="example">
+            <strong>Example:</strong> Team monitors user feedback on the discount feature, noticing users want the ability to stack multiple discount codes.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">10</span>
+          <h4>Continuous Improvement</h4>
+          <p class="definition">Using feedback and retrospective data to make enhancements. Teams regularly reflect on processes, tools, and outcomes to optimize their workflow.</p>
+          <div class="example">
+            <strong>Example:</strong> Based on user feedback, the team adds clearer instructions to the discount code field and improves error messages.
+          </div>
+        </div>
+
+        <div class="process-card">
+          <span class="process-number">11</span>
+          <h4>Continuous Monitoring &amp; Logging</h4>
+          <p class="definition">Tracking application performance and recording events in real time. Provides visibility into system health, user behavior, and potential issues before they escalate.</p>
+          <div class="example">
+            <strong>Example:</strong> Monitoring tools track discount code usage rates and log errors when invalid codes are submitted, alerting the on-call engineer.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 6: DevOps Tooling -->
+    <section class="section" id="devops-tooling">
+      <div class="section-label">Section 06</div>
+      <h2>DevOps Tooling</h2>
+
+      <p>DevOps engineers rely on a broad ecosystem of tools to automate, manage, and monitor the software delivery pipeline. Here are the key categories:</p>
+
+      <div class="tool-grid">
+
+        <div class="tool-card">
+          <h4>Version Control Systems</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Git</span>
+            <span class="tool-tag">GitHub</span>
+            <span class="tool-tag">GitLab</span>
+            <span class="tool-tag">Bitbucket</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>CI/CD</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Jenkins</span>
+            <span class="tool-tag">GitHub Actions</span>
+            <span class="tool-tag">GitLab CI</span>
+            <span class="tool-tag">CircleCI</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Configuration Management</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Ansible</span>
+            <span class="tool-tag">Chef</span>
+            <span class="tool-tag">Puppet</span>
+            <span class="tool-tag">SaltStack</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Containerization &amp; Orchestration</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Docker</span>
+            <span class="tool-tag">Kubernetes</span>
+            <span class="tool-tag">OpenShift</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Infrastructure as Code</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Terraform</span>
+            <span class="tool-tag">CloudFormation</span>
+            <span class="tool-tag">Pulumi</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Monitoring &amp; Logging</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Prometheus</span>
+            <span class="tool-tag">Grafana</span>
+            <span class="tool-tag">ELK Stack</span>
+            <span class="tool-tag">Datadog</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Artifact Repository Management</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">JFrog</span>
+            <span class="tool-tag">Nexus</span>
+            <span class="tool-tag">Docker Hub</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Collaboration &amp; Communication</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Slack</span>
+            <span class="tool-tag">Jira</span>
+            <span class="tool-tag">Confluence</span>
+            <span class="tool-tag">Teams</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Source Code Analysis</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">SonarQube</span>
+            <span class="tool-tag">ESLint</span>
+            <span class="tool-tag">CodeClimate</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Security &amp; Vulnerability Scanning</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Snyk</span>
+            <span class="tool-tag">Trivy</span>
+            <span class="tool-tag">OWASP ZAP</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Testing</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Selenium</span>
+            <span class="tool-tag">Jest</span>
+            <span class="tool-tag">Cypress</span>
+            <span class="tool-tag">JUnit</span>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h4>Backup &amp; Disaster Recovery</h4>
+          <div class="tool-tags">
+            <span class="tool-tag">Velero</span>
+            <span class="tool-tag">AWS Backup</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 7: DORA Metrics -->
+    <section class="section" id="dora-metrics">
+      <div class="section-label">Section 07</div>
+      <h2>DORA Metrics</h2>
+
+      <p>The <strong>DORA (DevOps Research and Assessment)</strong> metrics are four key measures that indicate the performance of a software delivery team. They are used industry-wide to benchmark and improve DevOps practices.</p>
+
+      <div class="dora-grid">
+
+        <div class="dora-card">
+          <span class="dora-icon" aria-hidden="true">&#x1F680;</span>
+          <h4>Deployment Frequency</h4>
+          <p>How often your organization successfully releases to production. Elite teams deploy on-demand, multiple times per day.</p>
+        </div>
+
+        <div class="dora-card">
+          <span class="dora-icon" aria-hidden="true">&#x23F1;</span>
+          <h4>Lead Time for Changes</h4>
+          <p>The time it takes for a code change to go from commit to successfully running in production. Shorter is better.</p>
+        </div>
+
+        <div class="dora-card">
+          <span class="dora-icon" aria-hidden="true">&#x26A0;</span>
+          <h4>Change Failure Rate</h4>
+          <p>The percentage of deployments that cause a failure in production requiring remediation (rollback, hotfix, patch).</p>
+        </div>
+
+        <div class="dora-card">
+          <span class="dora-icon" aria-hidden="true">&#x1F504;</span>
+          <h4>Mean Time to Recovery</h4>
+          <p>The average time it takes to recover from a failure in production. Also known as MTTR. Lower is better.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 8: Environment Classification -->
+    <section class="section" id="environments">
+      <div class="section-label">Section 08</div>
+      <h2>Environment Classification</h2>
+
+      <p>Software moves through a series of environments before reaching end-users. Each environment serves a specific purpose in validating the application.</p>
+
+      <div class="env-flow">
+        <div class="env-stage lower">
+          <span class="env-label">Lower Env</span>
+          <h4>Dev</h4>
+          <p class="env-desc">Active development and initial testing</p>
+          <p class="env-desc"><strong>Owned by:</strong> Developers</p>
+          <p class="env-url">www.development.devopseasylearning.com</p>
+        </div>
+        <div class="env-arrow">&#x2192;</div>
+        <div class="env-stage lower">
+          <span class="env-label">Lower Env</span>
+          <h4>QA</h4>
+          <p class="env-desc">Quality assurance and functional testing</p>
+          <p class="env-desc"><strong>Owned by:</strong> QA Team</p>
+          <p class="env-url">www.testing.devopseasylearning.com</p>
+        </div>
+        <div class="env-arrow">&#x2192;</div>
+        <div class="env-stage upper">
+          <span class="env-label">Upper Env</span>
+          <h4>PreProd / Staging</h4>
+          <p class="env-desc">Pre-production validation, mirrors prod</p>
+          <p class="env-desc"><strong>Owned by:</strong> DevOps</p>
+          <p class="env-url">www.pre-production.devopseasylearning.com</p>
+        </div>
+        <div class="env-arrow">&#x2192;</div>
+        <div class="env-stage upper">
+          <span class="env-label">Upper Env</span>
+          <h4>Production</h4>
+          <p class="env-desc">Live environment for end-users</p>
+          <p class="env-desc"><strong>Owned by:</strong> DevOps</p>
+          <p class="env-url">www.devopseasylearning.com</p>
+        </div>
+      </div>
+
+      <h3>Input / Output Flow</h3>
+      <div class="flow-row">
+        <span class="flow-item">Code</span>
+        <span class="flow-arrow">&#x2192;</span>
+        <span class="flow-item">Application</span>
+        <span class="flow-arrow">&#x2192;</span>
+        <span class="flow-item">Tested Application</span>
+        <span class="flow-arrow">&#x2192;</span>
+        <span class="flow-item">App Ready for End User</span>
+        <span class="flow-arrow">&#x2192;</span>
+        <span class="flow-item">Fully Operational App</span>
+      </div>
+
+      <div class="highlight-box" style="margin-top: 24px;">
+        <p><strong style="color: var(--tier-found);">Lower environments</strong> (Dev, QA) are only available to software factory employees &mdash; developers, QA engineers, and internal teams.</p>
+        <p style="margin-top: 8px; margin-bottom: 0;"><strong style="color: var(--tier-adv);">Production</strong> is available to anyone &mdash; end-users, customers, and the general public.</p>
+      </div>
+    </section>
+
+    <!-- Section 9: PreProd vs Prod -->
+    <section class="section" id="preprod-vs-prod">
+      <div class="section-label">Section 09</div>
+      <h2>PreProd vs Production</h2>
+
+      <p>Understanding the differences between Pre-Production and Production environments is critical for DevOps engineers.</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Aspect</th>
+            <th class="col-preprod">Pre-Production</th>
+            <th>Production</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Purpose</td>
+            <td class="col-preprod">Validate changes in a production-like environment before going live</td>
+            <td>Serve real end-users with the live application</td>
+          </tr>
+          <tr>
+            <td>Configuration &amp; Data</td>
+            <td class="col-preprod">Uses sanitized or synthetic test data; mirrors prod config</td>
+            <td>Uses real user data and production configurations</td>
+          </tr>
+          <tr>
+            <td>Testing &amp; Validation</td>
+            <td class="col-preprod">Final round of integration, performance, and UAT testing</td>
+            <td>Monitoring and observability replace active testing</td>
+          </tr>
+          <tr>
+            <td>User Access</td>
+            <td class="col-preprod">Restricted to internal teams and stakeholders</td>
+            <td>Open to all end-users and the public</td>
+          </tr>
+          <tr>
+            <td>Change Control</td>
+            <td class="col-preprod">Changes deployed frequently for validation</td>
+            <td>Strict change control with approval processes</td>
+          </tr>
+          <tr>
+            <td>Failure &amp; Rollback</td>
+            <td class="col-preprod">Failures are expected and used for learning; easy rollback</td>
+            <td>Failures impact users; requires rapid incident response and rollback</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Section 10: Deployment vs Release -->
+    <section class="section" id="deploy-vs-release">
+      <div class="section-label">Section 10</div>
+      <h2>Deployment vs Release</h2>
+
+      <p>While often used interchangeably, <strong>deployment</strong> and <strong>release</strong> are two distinct concepts in the software delivery process.</p>
+
+      <div class="vs-grid">
+        <div class="vs-card deploy">
+          <span class="vs-badge">Technical</span>
+          <h4>Deployment</h4>
+          <p>Moving code from development/testing environments to production. It is a <strong>technical process</strong> focused on installing and configuring the application on servers.</p>
+          <p style="margin-top: 12px;">Deployments are often <strong>internal</strong> and may not be immediately visible to end-users. Feature flags or canary releases can hide deployed code from users.</p>
+        </div>
+        <div class="vs-card release">
+          <span class="vs-badge">Business</span>
+          <h4>Release</h4>
+          <p>Making a deployed version <strong>accessible and visible to end-users</strong>. It is a <strong>business-oriented</strong> process that involves communication with stakeholders, marketing, and support teams.</p>
+          <p style="margin-top: 12px;">Releases are <strong>external</strong> &mdash; they represent the moment users can interact with new features.</p>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <p><strong style="color: var(--tier-core);">Key Difference:</strong> Deployment is <strong>internal and technical</strong> &mdash; code is placed on servers. Release is <strong>external and visible</strong> &mdash; features are made available to users. You can deploy without releasing (dark launches), and you can release previously deployed code (feature flags).</p>
+      </div>
+    </section>
+
+    <!-- Section 11: Environment Software Lifecycle -->
+    <section class="section" id="software-lifecycle">
+      <div class="section-label">Section 11</div>
+      <h2>Environment Software Lifecycle</h2>
+
+      <p>Software versions move through each environment sequentially. A version must successfully pass through all lower environments before being promoted to production.</p>
+
+      <h3>Version promotion flow</h3>
+
+      <div class="lifecycle-track">
+        <span class="version-badge dev">v1.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge qa">v1.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge preprod">v1.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge prod">v1.0.0</span>
+      </div>
+
+      <div class="lifecycle-track">
+        <span class="version-badge dev">v2.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge qa">v2.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge preprod">v2.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge prod">v2.0.0</span>
+      </div>
+
+      <div class="lifecycle-track">
+        <span class="version-badge dev">v3.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge qa">v3.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge preprod">v3.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge prod">v3.0.0</span>
+      </div>
+
+      <div class="lifecycle-track">
+        <span class="version-badge dev">vN.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge qa">vN.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge preprod">vN.0.0</span>
+        <span class="lifecycle-arrow">&#x2192;</span>
+        <span class="version-badge prod">vN.0.0</span>
+      </div>
+
+      <p style="margin-top: 12px;">Each row represents a full cycle: development, quality assurance, pre-production validation, and finally, production deployment. The cycle repeats with every new version, ensuring continuous delivery of improvements.</p>
+
+      <div style="margin-top: 20px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;">
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; font-size: 12px; font-family: 'JetBrains Mono', monospace;">
+          <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background: var(--tier-found-bg); border: 1px solid var(--tier-found-border);"></span> <span style="color: var(--tier-found);">Dev</span></span>
+          <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.15);"></span> <span style="color: #EAB308;">QA</span></span>
+          <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background: var(--tier-core-bg); border: 1px solid var(--tier-core-border);"></span> <span style="color: var(--tier-core);">PreProd</span></span>
+          <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background: var(--tier-adv-bg); border: 1px solid var(--tier-adv-border);"></span> <span style="color: var(--tier-adv);">Prod</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resources -->
+    <section class="section" id="resources">
+      <div class="section-label">Resources</div>
+      <h2>Recommended Reading</h2>
+
+      <ul class="resources-list">
+        <li>
+          <span class="resource-icon" aria-hidden="true">&#x1F4D6;</span>
+          <div>
+            <div class="resource-title">The Phoenix Project</div>
+            <div class="resource-author">Gene Kim, Kevin Behr, George Spafford &mdash; A novel about IT, DevOps, and helping your business win</div>
+          </div>
+        </li>
+        <li>
+          <span class="resource-icon" aria-hidden="true">&#x1F4CA;</span>
+          <div>
+            <div class="resource-title">Accelerate</div>
+            <div class="resource-author">Nicole Forsgren, Jez Humble, Gene Kim &mdash; The science of lean software and DevOps</div>
+          </div>
+        </li>
+        <li>
+          <span class="resource-icon" aria-hidden="true">&#x1F310;</span>
+          <div>
+            <div class="resource-title">Google SRE Book</div>
+            <div class="resource-author">Free online at sre.google/sre-book &mdash; How Google runs production systems</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer Navigation -->
+    <a href="git-and-vcs.html" class="footer-nav" style="text-decoration: none;">
+      <div>
+        <div class="footer-nav-label">Next Topic</div>
+        <div class="footer-nav-title">Git &amp; Version Control Systems</div>
+      </div>
+      <span class="footer-nav-arrow">&#x2192;</span>
+    </a>
+
+  </main>
+</div>
+
+<!-- ═══════ Footer ═══════ -->
+<footer class="page-footer">
+  DevOps Easy Learning &mdash; Building the next generation of DevOps engineers
+</footer>
+
+<!-- Minimal JS for mobile TOC toggle -->
+<script>
+  (function () {
+    var btn = document.getElementById('toc-toggle-btn');
+    var list = document.querySelector('.toc-list');
+    btn.addEventListener('click', function () {
+      btn.classList.toggle('open');
+      list.classList.toggle('open');
+    });
+    // Close TOC when a link is clicked (mobile)
+    list.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        btn.classList.remove('open');
+        list.classList.remove('open');
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

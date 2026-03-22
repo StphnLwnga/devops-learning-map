@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DevOps Learning Map</title>
+<title>DevOps Easy Learning Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/shared.css"/>
 <style>
   :root {
     --bg: #0C0C0E;
@@ -395,9 +396,17 @@
 <div class="container">
 
 <header>
-  <h1>DevOps Learning Roadmap</h1>
+  <h1>DevOps Easy Learning</h1>
   <p>Three-tier concept map — foundations first, then core practices, then specialization</p>
 </header>
+
+<a href="topics/what-is-devops.html" class="intro-banner">
+  <div class="intro-banner-content">
+    <h2>New here? Start with: What is DevOps?</h2>
+    <p>A comprehensive introduction to DevOps culture, processes, tooling, and environments</p>
+  </div>
+  <span class="arrow">&rarr;</span>
+</a>
 
 <!-- TIER 1: Foundations -->
 <div class="tier tier-found">
@@ -461,6 +470,9 @@
     <div class="detail-topics" id="p-topics"></div>
     <div class="detail-section-label">Suggested tools / resources</div>
     <div class="detail-resources" id="p-resources"></div>
+    <div id="p-lesson-wrap" style="display:none; margin-top: 16px;">
+      <a id="p-lesson-link" class="lesson-btn" href="#">Read full lesson &rarr;</a>
+    </div>
     <div class="detail-prompt">
       <p id="p-prompt"></p>
       <button class="copy-btn" id="p-copy">Copy</button>
@@ -478,22 +490,22 @@ const DATA = {
       about: 'Nearly everything in DevOps runs on Linux. You need fluency with the command line, file systems, process management, systemd services, and package managers before containers or cloud infra will make sense.',
       topics: ['Bash shell & navigation', 'File permissions & ownership', 'Process management (ps, top, kill)', 'systemd & services', 'Package managers (apt, yum)', 'Cron jobs & scheduling', 'SSH & remote access', 'Filesystem hierarchy'],
       resources: ['Linux Upskill Challenge', 'OverTheWire Bandit', 'LPIC-1 curriculum'],
-      prompt: 'I\'m learning Linux for DevOps with no CS background. Teach me the essential Linux concepts I need \u2014 shell navigation, file permissions, process management, systemd, and SSH \u2014 with hands-on exercises for each.'
+      prompt: 'I\'m learning Linux for DevOps with no CS background. Teach me the essential Linux concepts I need — shell navigation, file permissions, process management, systemd, and SSH — with hands-on exercises for each.'
     },
     {
       id: 'networking', icon: '🌐', name: 'Networking',
       desc: 'DNS, TCP/IP, HTTP, firewalls',
       color: '--c-network',
-      about: 'When a container can\'t reach a database, when a deploy fails silently, when latency spikes \u2014 it\'s almost always networking. Understanding how data moves between machines is non-negotiable.',
+      about: 'When a container can\'t reach a database, when a deploy fails silently, when latency spikes — it\'s almost always networking. Understanding how data moves between machines is non-negotiable.',
       topics: ['OSI model & TCP/IP stack', 'DNS resolution', 'HTTP/HTTPS & TLS', 'Ports & sockets', 'Firewalls & iptables', 'Load balancers', 'VPCs, subnets & CIDR', 'Proxy vs reverse proxy'],
       resources: ['Computer Networking (Kurose & Ross)', 'Practical Networking YouTube', 'Cloudflare Learning Center'],
       prompt: 'Explain networking fundamentals for a DevOps beginner without CS background: TCP/IP, DNS, HTTP/HTTPS, ports, load balancers, VPCs and subnets. Use real-world analogies and practical examples.'
     },
     {
-      id: 'scripting', icon: '\u26a1', name: 'Scripting',
+      id: 'scripting', icon: '⚡', name: 'Scripting',
       desc: 'Bash + Python automation',
       color: '--c-scripting',
-      about: 'You\'ll write glue code constantly \u2014 automating deployments, parsing logs, wiring tools together, building health checks. Bash for quick system tasks, Python for anything more complex.',
+      about: 'You\'ll write glue code constantly — automating deployments, parsing logs, wiring tools together, building health checks. Bash for quick system tasks, Python for anything more complex.',
       topics: ['Bash scripting fundamentals', 'Variables, loops, conditionals', 'Python for automation', 'Working with APIs (curl, requests)', 'Text processing (grep, sed, awk)', 'JSON/YAML parsing', 'Error handling & logging', 'Cron + script scheduling'],
       resources: ['Automate the Boring Stuff (Python)', 'Bash Academy', 'Shell Scripting Tutorial'],
       prompt: 'Teach me Bash and Python scripting for DevOps automation. Cover variables, loops, file operations, API calls, text processing, and error handling with practical exercises I can run in a terminal.'
@@ -502,13 +514,14 @@ const DATA = {
       id: 'git', icon: '🔀', name: 'Git & VCS',
       desc: 'Branching, merging, workflows',
       color: '--c-git',
-      about: 'Git is the backbone of everything \u2014 code, infrastructure definitions, pipeline configs, documentation. You need more than git add/commit/push: branching strategies, conflict resolution, and team workflows.',
+      hasContent: true, contentUrl: 'topics/git-and-vcs.html',
+      about: 'Git is the backbone of everything — code, infrastructure definitions, pipeline configs, documentation. You need more than git add/commit/push: branching strategies, conflict resolution, and team workflows.',
       topics: ['Git fundamentals (add, commit, push)', 'Branching & merging strategies', 'Rebasing vs merging', 'Pull requests & code review', 'Git hooks', 'Monorepo vs polyrepo', 'Gitflow / trunk-based development', '.gitignore & secrets hygiene'],
       resources: ['Pro Git book (free)', 'Learn Git Branching (interactive)', 'GitHub Skills'],
       prompt: 'Teach me Git beyond the basics for DevOps: branching strategies, rebasing vs merging, pull request workflows, git hooks, and trunk-based development. Include hands-on exercises.'
     },
     {
-      id: 'cloud', icon: '\u2601\ufe0f', name: 'Cloud (1 provider)',
+      id: 'cloud', icon: '☁️', name: 'Cloud (1 provider)',
       desc: 'AWS, GCP, or Azure fundamentals',
       color: '--c-cloud',
       about: 'Pick one cloud provider and learn it deeply. Understand compute (VMs, serverless), storage (object, block), networking (VPC, security groups), and IAM. AWS has the largest job market share.',
@@ -522,7 +535,7 @@ const DATA = {
       id: 'cicd', icon: '🔄', name: 'CI/CD Pipelines',
       desc: 'Automate build, test, deploy',
       color: '--c-cicd',
-      about: 'Automate code integration, testing, and delivery so shipping is reliable and frequent. This is where DevOps becomes tangible \u2014 every commit triggers a predictable path to production.',
+      about: 'Automate code integration, testing, and delivery so shipping is reliable and frequent. This is where DevOps becomes tangible — every commit triggers a predictable path to production.',
       topics: ['Continuous Integration concepts', 'Continuous Delivery vs Deployment', 'GitHub Actions / GitLab CI', 'Jenkins pipelines', 'Automated testing in CI', 'Artifact management', 'Blue-green & canary deploys', 'Pipeline-as-code patterns'],
       resources: ['GitHub Actions docs', 'Jenkins Tutorial', 'Continuous Delivery (Humble & Farley)'],
       prompt: 'Walk me through how a CI/CD pipeline works end-to-end. Cover the stages from code commit through production deployment, with a practical example using GitHub Actions.'
@@ -537,13 +550,13 @@ const DATA = {
       prompt: 'Explain Docker and Kubernetes from scratch. What problem does containerization solve, how does K8s orchestrate containers, and walk me through deploying a simple app to a cluster.'
     },
     {
-      id: 'iac', icon: '🏗\ufe0f', name: 'Infrastructure as Code',
+      id: 'iac', icon: '🏗️', name: 'Infrastructure as Code',
       desc: 'Terraform, Ansible, GitOps',
       color: '--c-iac',
-      about: 'Define all infrastructure in version-controlled code. No more clicking through cloud consoles \u2014 every server, database, and network rule is declared, repeatable, and auditable.',
+      about: 'Define all infrastructure in version-controlled code. No more clicking through cloud consoles — every server, database, and network rule is declared, repeatable, and auditable.',
       topics: ['Terraform (HCL basics)', 'State management', 'Ansible for configuration', 'Declarative vs imperative IaC', 'Modules & reusability', 'Immutable infrastructure', 'GitOps (ArgoCD / Flux)', 'Secrets in IaC'],
       resources: ['Terraform docs + tutorials', 'Ansible Getting Started', 'GitOps with ArgoCD'],
-      prompt: 'Explain Infrastructure as Code for someone new to it. Cover Terraform and Ansible \u2014 what each does, when to use which, and walk me through writing my first Terraform config.'
+      prompt: 'Explain Infrastructure as Code for someone new to it. Cover Terraform and Ansible — what each does, when to use which, and walk me through writing my first Terraform config.'
     },
     {
       id: 'monitoring', icon: '📊', name: 'Monitoring & Observability',
@@ -570,7 +583,7 @@ const DATA = {
       about: 'DevOps is a cultural shift more than a toolchain. Breaking down silos, shared ownership of outcomes, blameless post-mortems, and continuous feedback loops are what make the tools effective.',
       topics: ['Agile & Lean thinking', 'Shared ownership model', 'Blameless post-mortems', 'Continuous feedback loops', 'Cross-functional teams', 'Psychological safety', 'Value stream mapping', 'DORA metrics'],
       resources: ['The Phoenix Project (book)', 'Accelerate (Forsgren et al.)', 'Team Topologies'],
-      prompt: 'Explain the DevOps culture shift \u2014 why culture matters more than tools, how to run blameless post-mortems, what DORA metrics measure, and how to build shared ownership between dev and ops.'
+      prompt: 'Explain the DevOps culture shift — why culture matters more than tools, how to run blameless post-mortems, what DORA metrics measure, and how to build shared ownership between dev and ops.'
     }
   ],
   advanced: [
@@ -596,10 +609,10 @@ const DATA = {
       id: 'finops', icon: '💰', name: 'FinOps & Optimization',
       desc: 'Cloud cost management, efficiency',
       color: '--c-finops',
-      about: 'Cloud bills can spiral fast. FinOps brings financial accountability to cloud spending \u2014 tagging, right-sizing, reserved instances, spot/preemptible compute, and cost-aware architecture decisions.',
+      about: 'Cloud bills can spiral fast. FinOps brings financial accountability to cloud spending — tagging, right-sizing, reserved instances, spot/preemptible compute, and cost-aware architecture decisions.',
       topics: ['Cloud cost visibility & tagging', 'Right-sizing resources', 'Reserved / savings plans', 'Spot & preemptible instances', 'Cost allocation & showback', 'FinOps Foundation framework', 'Architecture cost trade-offs', 'Sustainability & green ops'],
       resources: ['FinOps Foundation', 'AWS Well-Architected (Cost)', 'Infracost (IaC cost checks)'],
-      prompt: 'Explain FinOps for DevOps engineers. How do I manage cloud costs effectively \u2014 tagging strategies, right-sizing, reserved instances, and building cost awareness into infrastructure decisions?'
+      prompt: 'Explain FinOps for DevOps engineers. How do I manage cloud costs effectively — tagging strategies, right-sizing, reserved instances, and building cost awareness into infrastructure decisions?'
     }
   ]
 };
@@ -650,6 +663,15 @@ function openPanel(item) {
   document.getElementById('p-topics').innerHTML = item.topics.map(t => `<span class="pill">${t}</span>`).join('');
   document.getElementById('p-resources').innerHTML = item.resources.map(r => `<span class="res-pill">${r}</span>`).join('');
   document.getElementById('p-prompt').textContent = `"${item.prompt}"`;
+
+  const lessonWrap = document.getElementById('p-lesson-wrap');
+  const lessonLink = document.getElementById('p-lesson-link');
+  if (item.hasContent && item.contentUrl) {
+    lessonLink.href = item.contentUrl;
+    lessonWrap.style.display = 'block';
+  } else {
+    lessonWrap.style.display = 'none';
+  }
 
   const copyBtn = document.getElementById('p-copy');
   copyBtn.textContent = 'Copy';
