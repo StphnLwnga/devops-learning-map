@@ -1020,6 +1020,259 @@
       font-size: 12px;
     }
   }
+
+  /* ───── Quiz Section ───── */
+  .quiz-section {
+    margin-bottom: 56px;
+    margin-top: 40px;
+  }
+
+  .quiz-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .quiz-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .quiz-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--tier-core);
+    background: var(--tier-core-bg);
+    border: 1px solid var(--tier-core-border);
+    padding: 5px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .quiz-progress-bar {
+    flex: 1;
+    min-width: 100px;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--tier-core), var(--tier-adv));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .quiz-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  .quiz-question {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.55;
+    margin-bottom: 20px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .quiz-options {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .quiz-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .quiz-option:hover:not(.disabled) {
+    border-color: var(--tier-core-border);
+    background: var(--tier-core-bg);
+    color: var(--text);
+  }
+
+  .quiz-option.disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .quiz-option.correct {
+    border-color: var(--tier-adv-border) !important;
+    background: var(--tier-adv-bg) !important;
+    color: var(--tier-adv) !important;
+    opacity: 1 !important;
+    font-weight: 600;
+  }
+
+  .quiz-option.wrong {
+    border-color: #EF4444 !important;
+    background: rgba(239, 68, 68, 0.08) !important;
+    color: #EF4444 !important;
+    opacity: 1 !important;
+  }
+
+  .opt-letter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    color: var(--text-dim);
+  }
+
+  .quiz-option.correct .opt-letter {
+    background: var(--tier-adv);
+    border-color: var(--tier-adv);
+    color: #fff;
+  }
+
+  .quiz-option.wrong .opt-letter {
+    background: #EF4444;
+    border-color: #EF4444;
+    color: #fff;
+  }
+
+  .quiz-explanation {
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--tier-core);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-top: 8px;
+  }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+
+  .quiz-next-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 24px;
+    background: var(--tier-core);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .quiz-next-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .quiz-results {
+    text-align: center;
+    padding: 48px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+
+  .score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 auto 20px;
+    border: 4px solid;
+  }
+
+  .score-circle.pass {
+    color: var(--tier-adv);
+    background: var(--tier-adv-bg);
+    border-color: var(--tier-adv-border);
+  }
+
+  .score-circle.fail {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+
+  .result-msg {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .result-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .quiz-restart-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 32px;
+    background: var(--tier-core);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .quiz-restart-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
 </style>
 </head>
 <body>
@@ -1062,6 +1315,7 @@
       <li><a href="#deploy-vs-release">Deployment vs Release</a></li>
       <li><a href="#software-lifecycle">Software Lifecycle</a></li>
       <li><a href="#resources">Resources</a></li>
+      <li><a href="#quiz">Quiz</a></li>
     </ul>
   </aside>
 
@@ -1683,6 +1937,13 @@
       </ul>
     </section>
 
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quiz">
+      <h2>Test Your Knowledge</h2>
+      <p class="quiz-subtitle">10 random questions from this lesson. Refresh for a new set.</p>
+      <div id="quiz-container"></div>
+    </section>
+
     <!-- Footer Navigation -->
     <a href="git-and-vcs.html" class="footer-nav" style="text-decoration: none;">
       <div>
@@ -1717,6 +1978,403 @@
       });
     });
   })();
+</script>
+
+<script>
+const QUESTIONS = [
+  // Questions 1-5: What is DevOps (DEV + OPS definition)
+  {
+    q: "What does DevOps stand for?",
+    options: ["Developer Optimization", "Development and Operations", "Device Operations", "Develop and Oppose"],
+    correct: 1,
+    explanation: "DevOps is a combination of Development (DEV) and Operations (OPS). It bridges the gap between these two disciplines."
+  },
+  {
+    q: "What is the primary goal of DevOps?",
+    options: ["Replace all developers with automation", "Improve and better control the software development life cycle (SDLC)", "Eliminate the need for operations teams", "Build applications from scratch"],
+    correct: 1,
+    explanation: "DevOps is a culture and set of practices that bridges the gap between Development and Operations teams to improve and better control the SDLC."
+  },
+  {
+    q: "Where do DevOps engineers primarily sit within an organization?",
+    options: ["Exclusively on the development side", "In the middle of all SDLC teams", "Only within the security team", "In a completely separate department from development"],
+    correct: 1,
+    explanation: "DevOps engineers sit in the middle of all SDLC teams and provide tools, automation, and processes that enable those teams to deliver software faster and more reliably."
+  },
+  {
+    q: "Which equation best represents DevOps?",
+    options: ["DEV x OPS = DevOps", "DEV + OPS = DevOps", "DEV - OPS = DevOps", "DEV / OPS = DevOps"],
+    correct: 1,
+    explanation: "DevOps is represented as DEV + OPS, combining Development and Operations into a unified approach."
+  },
+  {
+    q: "DevOps engineers primarily focus on which side of the SDLC?",
+    options: ["The design and UX side", "The marketing and sales side", "The operations side", "The application coding side"],
+    correct: 2,
+    explanation: "DevOps engineers work on the operations side of the software development life cycle. They do not develop applications — developers do that."
+  },
+  // Questions 6-10: DEV (Application Development)
+  {
+    q: "What does DEV stand for in DevOps?",
+    options: ["Device Engineering and Validation", "Application Development", "Developer Evaluation", "Design and Evolution"],
+    correct: 1,
+    explanation: "DEV stands for Application Development. It refers to the process of creating programs that allow end-users to perform particular functions."
+  },
+  {
+    q: "Which of the following best describes an application?",
+    options: ["A server that hosts websites", "A program that allows end-users to perform particular functions", "A database management system", "An operating system kernel"],
+    correct: 1,
+    explanation: "An application is a program, or set of programs, that allows end-users to perform particular functions — like Facebook for social media or banking apps for managing finances."
+  },
+  {
+    q: "Do DevOps engineers write application code?",
+    options: ["Yes, they write all application code", "Yes, but only for frontend applications", "No, DevOps engineers are not developers", "Yes, they write code and also manage operations"],
+    correct: 2,
+    explanation: "DevOps does not develop applications — developers do that. DevOps engineers are not developers; they work on the operations side of the SDLC."
+  },
+  {
+    q: "Which of the following is an example of an application mentioned in the lesson?",
+    options: ["Kubernetes", "Terraform", "DoorDash", "Jenkins"],
+    correct: 2,
+    explanation: "DoorDash (for ordering food) is mentioned as an everyday application example, along with Facebook, WhatsApp, banking apps, and email services."
+  },
+  {
+    q: "What is the relationship between DevOps and application developers?",
+    options: ["DevOps replaces developers", "DevOps engineers supervise developers", "DevOps provides tools and automation to support developers", "DevOps and developers have no interaction"],
+    correct: 2,
+    explanation: "DevOps engineers provide tools, automation, and processes that enable development teams (and other SDLC teams) to deliver software faster and more reliably."
+  },
+  // Questions 11-15: OPS (Operations)
+  {
+    q: "What does OPS stand for in DevOps?",
+    options: ["Optimal Programming Standards", "Operations", "Output Processing System", "Organized Platform Services"],
+    correct: 1,
+    explanation: "OPS stands for Operations. Operations means transforming the code from developers into a fully working application that end-users can interact with."
+  },
+  {
+    q: "What is the main function of Operations in DevOps?",
+    options: ["Writing application code", "Designing user interfaces", "Transforming code into a fully working application for end-users", "Conducting market research"],
+    correct: 2,
+    explanation: "Operations means transforming the code coming from developers into a fully working application that end-users can interact with."
+  },
+  {
+    q: "Which of the following is NOT a responsibility of Operations?",
+    options: ["Building and testing applications", "Writing the core application code", "Deploying and monitoring applications", "Maintaining the application in production"],
+    correct: 1,
+    explanation: "Writing core application code is the responsibility of developers. Operations handles building, testing, deploying, monitoring, and maintaining the application."
+  },
+  {
+    q: "How do DevOps engineers accomplish the transformation from code to application?",
+    options: ["By manually copying files to servers", "Using tools, automation pipelines, and infrastructure management practices", "By rewriting the application from scratch", "By outsourcing to third-party vendors"],
+    correct: 1,
+    explanation: "DevOps engineers use a wide variety of tools, automation pipelines, and infrastructure management practices to transform code into working applications."
+  },
+  {
+    q: "Which statement best describes the DEV vs OPS relationship?",
+    options: ["DEV and OPS do the same work", "Developers write code; Operations transforms that code into a working, running, accessible application", "OPS writes code; DEV deploys it", "DEV and OPS work independently without collaboration"],
+    correct: 1,
+    explanation: "Developers write the code. Operations teams transform that code into a working, running, accessible application."
+  },
+  // Questions 16-20: DevOps Culture
+  {
+    q: "DevOps engineers provide tools for which teams?",
+    options: ["Only the development team", "Only the QA team", "All teams involved in the SDLC", "Only the security team"],
+    correct: 2,
+    explanation: "DevOps engineers sit in the middle and provide tools, practices, and automation for all teams involved in the SDLC, including DEV, QA, IT, and Security."
+  },
+  {
+    q: "What is the main cultural shift DevOps promotes?",
+    options: ["Separating development and operations into independent silos", "Breaking the gap between Development and Operations teams", "Eliminating the QA team entirely", "Moving all operations to the cloud"],
+    correct: 1,
+    explanation: "DevOps is fundamentally a cultural shift that breaks the gap between Development and Operations teams."
+  },
+  {
+    q: "Which of the following is NOT listed as a team that DevOps supports?",
+    options: ["Quality Assurance (QA)", "Network Team (IT)", "Marketing and Sales Team", "Security and Infosec"],
+    correct: 2,
+    explanation: "The teams DevOps supports include Development, Quality Assurance, Network Team (IT), and Security & Infosec. Marketing and Sales is not listed."
+  },
+  {
+    q: "Which of the following is listed as a DevOps engineer colleague?",
+    options: ["Product Designer", "Database Administrator", "Marketing Manager", "Legal Counsel"],
+    correct: 1,
+    explanation: "Database Administrators are listed as DevOps engineer colleagues, along with Developers, Quality Engineers, Network Engineers, Security Engineers, IT Helpdesk, and CyberSecurity Engineers."
+  },
+  {
+    q: "DevOps is best described as which of the following?",
+    options: ["A single tool for automating deployments", "A job title with no cultural implications", "A culture and set of practices", "A programming language"],
+    correct: 2,
+    explanation: "DevOps is a culture and set of practices that bridges the gap between Development and Operations teams."
+  },
+  // Questions 21-30: DevOps Process (10 questions covering continuous practices)
+  {
+    q: "What is Continuous Integration (CI)?",
+    options: ["Deploying code directly to production without testing", "Frequently merging code changes into a shared repository with automated testing", "Writing documentation for every code change", "Manually reviewing every line of code before merging"],
+    correct: 1,
+    explanation: "Continuous Integration involves frequently merging code changes into a shared repository with automated testing. Every integration triggers an automated build and test sequence."
+  },
+  {
+    q: "What happens during Continuous Deployment?",
+    options: ["Code is manually deployed by an engineer", "Code is automatically deployed to production after all tests pass", "Code is deployed only on weekends", "Code is deployed to development but not production"],
+    correct: 1,
+    explanation: "Continuous Deployment automatically deploys code to production after all tests pass. Every change that passes the pipeline reaches production without manual intervention."
+  },
+  {
+    q: "What is the purpose of Continuous Feedback?",
+    options: ["To provide salary feedback to engineers", "To collect feedback from users, stakeholders, and monitoring tools to inform improvements", "To send automated emails to customers", "To replace user testing entirely"],
+    correct: 1,
+    explanation: "Continuous Feedback involves collecting feedback from users, stakeholders, and monitoring tools to inform development priorities and improvements."
+  },
+  {
+    q: "What is Continuous Code Inspection?",
+    options: ["Reviewing code manually or with automated tools for bugs, security vulnerabilities, and code quality", "Inspecting server hardware for defects", "Counting lines of code written per day", "Running the application in a browser to check the UI"],
+    correct: 0,
+    explanation: "Continuous Code Inspection involves reviewing code manually or with automated tools for bugs, security vulnerabilities, and overall code quality."
+  },
+  {
+    q: "How does Continuous Delivery (CD) differ from Continuous Deployment?",
+    options: ["They are exactly the same thing", "CD requires a manual approval gate before production releases", "CD skips all testing phases", "CD only works with containerized applications"],
+    correct: 1,
+    explanation: "Unlike Continuous Deployment, Continuous Delivery requires human sign-off for production pushes. The code is always in a deployable state but waits for manual approval."
+  },
+  {
+    q: "What does Continuous Planning involve?",
+    options: ["Planning a project only at the beginning", "Continuously defining goals, tasks, and requirements throughout the project lifecycle", "Creating a single roadmap that never changes", "Planning only when bugs are discovered"],
+    correct: 1,
+    explanation: "Continuous Planning involves continuously defining goals, tasks, and requirements throughout the project lifecycle. Teams collaborate to break down features into actionable work items."
+  },
+  {
+    q: "What is the concept of 'shifting security left' related to?",
+    options: ["Continuous Testing", "Continuous Security", "Continuous Deployment", "Continuous Planning"],
+    correct: 1,
+    explanation: "Continuous Security integrates security practices throughout the entire pipeline. Security is not a phase but a constant practice — often called 'shifting security left.'"
+  },
+  {
+    q: "What does Continuous Monitoring and Logging provide?",
+    options: ["A way to monitor employee productivity", "Visibility into system health, user behavior, and potential issues in real time", "Automated code reviews", "A backup of all source code"],
+    correct: 1,
+    explanation: "Continuous Monitoring and Logging tracks application performance and records events in real time, providing visibility into system health, user behavior, and potential issues."
+  },
+  {
+    q: "What is the purpose of Continuous Improvement?",
+    options: ["Continuously hiring more engineers", "Using feedback and retrospective data to make enhancements and optimize workflow", "Continuously increasing server capacity", "Replacing old tools with new ones every month"],
+    correct: 1,
+    explanation: "Continuous Improvement uses feedback and retrospective data to make enhancements. Teams regularly reflect on processes, tools, and outcomes to optimize their workflow."
+  },
+  {
+    q: "How many phases are described in the DevOps Process?",
+    options: ["5", "8", "11", "15"],
+    correct: 2,
+    explanation: "The DevOps process includes 11 continuous phases: Planning, Development, Integration, Code Inspection, Testing, Deployment, Delivery, Security, Feedback, Improvement, and Monitoring & Logging."
+  },
+  // Questions 31-37: DevOps Tooling
+  {
+    q: "Which tool is commonly used for container orchestration?",
+    options: ["Jenkins", "Terraform", "Kubernetes", "SonarQube"],
+    correct: 2,
+    explanation: "Kubernetes is listed under Containerization & Orchestration tools, along with Docker and OpenShift."
+  },
+  {
+    q: "Terraform is an example of which category of DevOps tools?",
+    options: ["CI/CD", "Configuration Management", "Infrastructure as Code", "Monitoring & Logging"],
+    correct: 2,
+    explanation: "Terraform is listed under Infrastructure as Code tools, alongside CloudFormation and Pulumi."
+  },
+  {
+    q: "Which tool is used for CI/CD?",
+    options: ["Docker", "Ansible", "Jenkins", "Prometheus"],
+    correct: 2,
+    explanation: "Jenkins is listed under CI/CD tools, along with GitHub Actions, GitLab CI, and CircleCI."
+  },
+  {
+    q: "Which of the following is a Configuration Management tool?",
+    options: ["Grafana", "Ansible", "Snyk", "Jira"],
+    correct: 1,
+    explanation: "Ansible is listed under Configuration Management, along with Chef, Puppet, and SaltStack."
+  },
+  {
+    q: "Which tool category includes Prometheus and Grafana?",
+    options: ["Version Control Systems", "Infrastructure as Code", "Monitoring & Logging", "Security & Vulnerability Scanning"],
+    correct: 2,
+    explanation: "Prometheus and Grafana are both listed under Monitoring & Logging tools, along with ELK Stack and Datadog."
+  },
+  {
+    q: "SonarQube belongs to which DevOps tool category?",
+    options: ["CI/CD", "Source Code Analysis", "Containerization", "Backup & Disaster Recovery"],
+    correct: 1,
+    explanation: "SonarQube is listed under Source Code Analysis tools, alongside ESLint and CodeClimate."
+  },
+  {
+    q: "Which of the following is an Artifact Repository Management tool?",
+    options: ["Selenium", "Velero", "JFrog", "Slack"],
+    correct: 2,
+    explanation: "JFrog is listed under Artifact Repository Management, along with Nexus and Docker Hub."
+  },
+  // Questions 38-41: DORA Metrics
+  {
+    q: "Which DORA metric measures how often deployments happen?",
+    options: ["Lead Time for Changes", "Change Failure Rate", "Deployment Frequency", "Mean Time to Recovery"],
+    correct: 2,
+    explanation: "Deployment Frequency measures how often your organization successfully releases to production. Elite teams deploy on-demand, multiple times per day."
+  },
+  {
+    q: "What does MTTR stand for in DORA metrics?",
+    options: ["Maximum Time To Rebuild", "Mean Time to Recovery", "Minimum Time To Release", "Measured Time To Resolve"],
+    correct: 1,
+    explanation: "MTTR stands for Mean Time to Recovery — the average time it takes to recover from a failure in production. Lower is better."
+  },
+  {
+    q: "What does Change Failure Rate measure?",
+    options: ["How often code changes are rejected in review", "The percentage of deployments that cause a failure in production requiring remediation", "The number of bugs found during testing", "How quickly developers write code"],
+    correct: 1,
+    explanation: "Change Failure Rate measures the percentage of deployments that cause a failure in production requiring remediation such as a rollback, hotfix, or patch."
+  },
+  {
+    q: "What does Lead Time for Changes measure?",
+    options: ["The time from project inception to first release", "The time it takes for a code change to go from commit to running in production", "The time spent in code review", "The time between planning meetings"],
+    correct: 1,
+    explanation: "Lead Time for Changes measures the time it takes for a code change to go from commit to successfully running in production. Shorter is better."
+  },
+  // Questions 42-46: Environment Classification
+  {
+    q: "Which environment is accessible to end users?",
+    options: ["Dev", "QA", "PreProd / Staging", "Production"],
+    correct: 3,
+    explanation: "Production is the live environment for end-users. It is available to anyone — end-users, customers, and the general public."
+  },
+  {
+    q: "In which order do environments flow in the SDLC?",
+    options: ["QA -> Dev -> Prod -> PreProd", "Dev -> QA -> PreProd -> Production", "Production -> PreProd -> QA -> Dev", "PreProd -> Dev -> QA -> Production"],
+    correct: 1,
+    explanation: "Software moves through Dev, QA, PreProd/Staging, and finally Production. Each environment serves a specific purpose in validating the application."
+  },
+  {
+    q: "Who owns the production environment?",
+    options: ["Developers", "QA Team", "DevOps", "End users"],
+    correct: 2,
+    explanation: "The production environment is owned by DevOps, as shown in the environment classification. DevOps also owns the PreProd/Staging environment."
+  },
+  {
+    q: "What is a lower environment?",
+    options: ["An environment with less computing power", "Dev and QA environments available only to software factory employees", "The production environment during off-peak hours", "An environment running an older version of the software"],
+    correct: 1,
+    explanation: "Lower environments (Dev, QA) are only available to software factory employees — developers, QA engineers, and internal teams."
+  },
+  {
+    q: "Who owns the QA environment?",
+    options: ["DevOps", "Developers", "QA Team", "Security Team"],
+    correct: 2,
+    explanation: "The QA environment is owned by the QA Team, as shown in the environment classification diagram."
+  },
+  // Questions 47-49: PreProd vs Prod
+  {
+    q: "What is the main purpose of the PreProd environment?",
+    options: ["To serve real end-users", "To validate changes in a production-like environment before going live", "To write and debug new code", "To run marketing campaigns"],
+    correct: 1,
+    explanation: "Pre-Production is used to validate changes in a production-like environment before going live. It mirrors production configuration but uses sanitized or synthetic test data."
+  },
+  {
+    q: "Who has access to the production environment?",
+    options: ["Only developers", "Only internal teams and stakeholders", "All end-users and the public", "Only the DevOps team"],
+    correct: 2,
+    explanation: "Production is open to all end-users and the public, unlike PreProd which is restricted to internal teams and stakeholders."
+  },
+  {
+    q: "What type of data does the PreProd environment use?",
+    options: ["Real user production data", "Sanitized or synthetic test data", "No data at all", "Only historical archived data"],
+    correct: 1,
+    explanation: "Pre-Production uses sanitized or synthetic test data while mirroring production configuration. Production uses real user data and production configurations."
+  },
+  // Question 50: Deployment vs Release
+  {
+    q: "What is the key difference between deployment and release?",
+    options: ["There is no difference; they are the same thing", "Deployment is internal and technical; release is external and visible to users", "Deployment is for mobile apps; release is for web apps", "Deployment happens monthly; release happens yearly"],
+    correct: 1,
+    explanation: "Deployment is internal and technical — code is placed on servers. Release is external and visible — features are made available to users. You can deploy without releasing (dark launches)."
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let quizQuestions, currentQ, score, answered;
+
+function initQuiz() {
+  quizQuestions = shuffle(QUESTIONS).slice(0, 10);
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizQuestions[currentQ];
+  const letters = ['A', 'B', 'C', 'D'];
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = `
+    <div class="quiz-header">
+      <span class="quiz-counter">Question ${currentQ + 1} / 10</span>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${(currentQ / 10) * 100}%"></div></div>
+      <span class="quiz-score">Score: ${score}/10</span>
+    </div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options">
+      ${q.options.map((opt, i) => `
+        <div class="quiz-option" onclick="selectAnswer(${i})" data-idx="${i}">
+          <span class="opt-letter">${letters[i]}</span>
+          <span>${opt}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div id="quiz-feedback"></div>
+    <div class="quiz-nav" id="quiz-nav" style="display:none">
+      <button class="quiz-next-btn" onclick="${currentQ < 9 ? 'currentQ++;renderQuestion()' : 'showResults()'}">
+        ${currentQ < 9 ? 'Next Question \u2192' : 'See Results'}
+      </button>
+    </div>
+  `;
+  answered = false;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = quizQuestions[currentQ];
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach(opt => opt.classList.add('disabled'));
+
+  if (idx === q.correct) {
+    score++;
+    options[idx].classList.add('correct');
+  } else {
+    options[idx].classList.add('wrong');
+    options[q.correct].classList.add('correct');
+  }
+
+  document.getElementById('quiz-feedback').innerHTML = `<div class="quiz-explanation">${q.explanation}</div>`;
+  document.getElementById('quiz-nav').style.display = 'flex';
+  document.querySelector('.quiz-score').textContent = 'Score: ' + score + '/10';
+}
+
+function showResults() {
+  const passed = score >= 7;
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="quiz-results">
+      <div class="score-circle ${passed ? 'pass' : 'fail'}">${score}/10</div>
+      <div class="result-msg">${passed ? 'Great job!' : 'Keep learning!'}</div>
+      <div class="result-sub">${passed ? 'You have a solid understanding of DevOps concepts.' : 'Review the content above and try again.'}</div>
+      <button class="quiz-restart-btn" onclick="initQuiz()">Retake Quiz</button>
+    </div>
+  `;
+}
+
+initQuiz();
 </script>
 
 </body>

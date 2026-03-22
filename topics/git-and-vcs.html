@@ -427,6 +427,7 @@
       <li><a href="#pull-requests">Pull Requests</a></li>
       <li><a href="#best-practices">Best Practices</a></li>
       <li><a href="#resources">Resources</a></li>
+      <li><a href="#quiz">Quiz</a></li>
     </ul>
   </aside>
 
@@ -840,6 +841,13 @@
       </div>
     </section>
 
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quiz">
+      <h2>Test Your Knowledge</h2>
+      <p class="quiz-subtitle">10 random questions from this lesson. Refresh for a new set.</p>
+      <div id="quiz-container"></div>
+    </section>
+
     <!-- ── Footer Navigation ──────────────────────────── -->
     <nav class="footer-nav">
       <a href="what-is-devops.html" class="footer-link prev">
@@ -871,6 +879,7 @@
     <li><a href="#pull-requests" onclick="closeToc()">Pull Requests</a></li>
     <li><a href="#best-practices" onclick="closeToc()">Best Practices</a></li>
     <li><a href="#resources" onclick="closeToc()">Resources</a></li>
+    <li><a href="#quiz" onclick="closeToc()">Quiz</a></li>
   </ul>
 </div>
 
@@ -919,6 +928,399 @@
   }
   window.addEventListener('scroll', updateActive, { passive: true });
   updateActive();
+
+  // ── Quiz Engine ──────────────────────────────────────
+  const QUESTIONS = [
+    // Questions 1-6: What is Git?
+    {
+      q: "What is Git?",
+      options: ["A programming language", "A distributed version control system", "A cloud hosting platform", "A text editor"],
+      correct: 1,
+      explanation: "Git is a free, open-source distributed version control system designed to track changes in source code during software development."
+    },
+    {
+      q: "Who created Git?",
+      options: ["Bill Gates", "Guido van Rossum", "Linus Torvalds", "Mark Zuckerberg"],
+      correct: 2,
+      explanation: "Linus Torvalds created Git in 2005 to manage the development of the Linux kernel after the relationship with BitKeeper broke down."
+    },
+    {
+      q: "What year was Git created?",
+      options: ["2000", "2003", "2005", "2008"],
+      correct: 2,
+      explanation: "Git was created in 2005 by Linus Torvalds for managing the Linux kernel source code."
+    },
+    {
+      q: "Git is what type of version control system?",
+      options: ["Centralized", "Distributed", "Linear", "Hierarchical"],
+      correct: 1,
+      explanation: "Git is a distributed version control system, meaning every developer has a full copy of the repository history on their local machine."
+    },
+    {
+      q: "What is a Git repository?",
+      options: ["A website for sharing code", "A project folder tracked by Git containing files and their history", "A type of database", "An online backup service"],
+      correct: 1,
+      explanation: "A Git repository (repo) is a project folder tracked by Git that contains all files and their complete history of changes."
+    },
+    {
+      q: "What is a commit in Git?",
+      options: ["A request to merge branches", "A snapshot of your changes at a point in time", "A copy of the remote repository", "A file that tracks merge conflicts"],
+      correct: 1,
+      explanation: "A commit is a snapshot of your changes at a specific point in time, accompanied by a descriptive message explaining what was changed and why."
+    },
+    // Questions 7-11: What is GitHub?
+    {
+      q: "What is GitHub?",
+      options: ["A version control tool that runs locally", "An online platform for hosting and collaborating on Git repositories", "A Git command-line extension", "A code compiler"],
+      correct: 1,
+      explanation: "GitHub is an online software development platform used for storing, tracking, and collaborating on software projects using Git repositories."
+    },
+    {
+      q: "How does GitHub differ from Git?",
+      options: ["GitHub is a local tool; Git is cloud-based", "Git is the version control tool; GitHub is a hosting platform with collaboration features", "They are the same thing", "GitHub replaced Git in 2010"],
+      correct: 1,
+      explanation: "Git is the version control tool that runs on your local machine, while GitHub is a hosting platform that adds collaboration features like pull requests and issues on top of Git."
+    },
+    {
+      q: "Which of these is NOT a Git hosting platform?",
+      options: ["GitLab", "Bitbucket", "Jenkins", "Azure DevOps"],
+      correct: 2,
+      explanation: "Jenkins is a continuous integration/continuous delivery (CI/CD) automation server, not a Git hosting platform. GitLab, Bitbucket, and Azure DevOps all provide Git repository hosting."
+    },
+    {
+      q: "What collaboration feature does GitHub add on top of Git?",
+      options: ["Branching", "Committing", "Pull requests and code review", "File tracking"],
+      correct: 2,
+      explanation: "GitHub adds collaboration features such as pull requests, issues, project boards, and GitHub Actions on top of Git's core version control capabilities."
+    },
+    {
+      q: "GitHub is primarily used for what?",
+      options: ["Designing user interfaces", "Storing, tracking, and collaborating on software projects", "Running production servers", "Managing databases"],
+      correct: 1,
+      explanation: "GitHub is an online software development platform primarily used for storing, tracking, and collaborating on software projects."
+    },
+    // Questions 12-15: Setting Up Accounts
+    {
+      q: "To create a GitHub account, you need to...",
+      options: ["Install Git on your machine first", "Pay a monthly subscription", "Visit github.com and sign up with an email", "Download the GitHub desktop app"],
+      correct: 2,
+      explanation: "To create a GitHub account, you visit github.com, click 'Sign up', and follow the registration instructions with your email, password, and username."
+    },
+    {
+      q: "Which of these platforms offers free unlimited private repositories?",
+      options: ["None of them", "GitHub only", "Both GitHub and GitLab", "Bitbucket only"],
+      correct: 2,
+      explanation: "Both GitHub and GitLab offer free unlimited private repositories, making them accessible for personal and small team projects."
+    },
+    {
+      q: "What is required to sign up for GitLab?",
+      options: ["A paid license key", "An email address or a Google/GitHub/Bitbucket account", "A Linux operating system", "A corporate domain email"],
+      correct: 1,
+      explanation: "You can sign up for GitLab using your email address, or by authenticating with your Google, GitHub, or Bitbucket account."
+    },
+    {
+      q: "What is the first step to start using Git for collaboration?",
+      options: ["Install a code editor", "Create an account on a hosting platform like GitHub", "Learn a programming language", "Buy a server"],
+      correct: 1,
+      explanation: "Before working with Git collaboratively, you need an account on a hosting platform such as GitHub or GitLab to store and share your repositories."
+    },
+    // Questions 16-22: SSH Keys
+    {
+      q: "What command displays your SSH public key?",
+      options: ["ssh-keygen -show", "cat ~/.ssh/id_rsa.pub", "git ssh --list", "ssh --display-key"],
+      correct: 1,
+      explanation: "The command 'cat ~/.ssh/id_rsa.pub' displays the contents of your SSH public key file, which you can then copy to GitHub."
+    },
+    {
+      q: "Where is the SSH public key typically located?",
+      options: ["/etc/ssh/keys/", "~/.ssh/id_rsa.pub", "~/git/ssh_key.pub", "/usr/local/ssh/public.key"],
+      correct: 1,
+      explanation: "By default, SSH keys are stored in the ~/.ssh/ directory, with the public key in id_rsa.pub and the private key in id_rsa."
+    },
+    {
+      q: "What is the purpose of an SSH key in Git?",
+      options: ["To encrypt your source code", "To authenticate securely without entering username and password each time", "To sign your commits with a digital signature", "To compress repository data"],
+      correct: 1,
+      explanation: "SSH keys allow you to authenticate with GitHub or GitLab securely without entering your username and password each time you push or pull."
+    },
+    {
+      q: "How do you generate a new SSH key?",
+      options: ["git ssh-keygen new", "ssh-keygen -t rsa -b 4096 -C \"email\"", "github --create-ssh", "openssl genrsa -ssh"],
+      correct: 1,
+      explanation: "The command 'ssh-keygen -t rsa -b 4096 -C \"your_email@example.com\"' generates a new SSH key pair with RSA encryption at 4096 bits."
+    },
+    {
+      q: "What does the -t flag specify when generating an SSH key?",
+      options: ["The token name", "The key type (e.g., rsa)", "The target server", "The time-to-live"],
+      correct: 1,
+      explanation: "The -t flag specifies the type of key to create, such as 'rsa' for RSA encryption."
+    },
+    {
+      q: "After generating an SSH key, where do you add the public key?",
+      options: ["In your .gitignore file", "In your repository's README", "In your GitHub account under Settings > SSH and GPG keys", "In your git config file"],
+      correct: 2,
+      explanation: "After generating an SSH key, you add the public key to your GitHub account by navigating to Settings > SSH and GPG keys > New SSH key."
+    },
+    {
+      q: "What does -b 4096 specify when generating an SSH key?",
+      options: ["The backup count", "The number of bits in the key (key strength)", "The block size", "The buffer size"],
+      correct: 1,
+      explanation: "The -b 4096 flag specifies the number of bits in the key, with 4096 bits providing strong encryption security."
+    },
+    // Questions 23-28: Personal Access Tokens
+    {
+      q: "What is a Personal Access Token (PAT) used for?",
+      options: ["Encrypting repository data", "Authenticating with GitHub for HTTPS operations and API access", "Creating new repositories automatically", "Managing branch permissions"],
+      correct: 1,
+      explanation: "Personal access tokens are an alternative to SSH keys for authenticating with GitHub, especially useful for HTTPS-based operations and API access."
+    },
+    {
+      q: "Where do you find Developer Settings in GitHub?",
+      options: ["In the repository settings", "At the bottom of the left sidebar in your account Settings", "In the GitHub CLI", "In the .git/config file"],
+      correct: 1,
+      explanation: "Developer settings can be found by going to your GitHub account Settings and scrolling down to 'Developer settings' at the bottom of the left sidebar."
+    },
+    {
+      q: "What are the two types of PATs on GitHub?",
+      options: ["Read tokens and Write tokens", "Fine-grained tokens and Tokens (classic)", "Temporary tokens and Permanent tokens", "User tokens and Organization tokens"],
+      correct: 1,
+      explanation: "GitHub offers two types of personal access tokens: Fine-grained tokens (recommended, with granular permissions) and Tokens (classic)."
+    },
+    {
+      q: "After generating a PAT, what should you do immediately?",
+      options: ["Share it with your team", "Copy and save it because you won't be able to see it again", "Post it in your repository README", "Email it to yourself"],
+      correct: 1,
+      explanation: "You must copy and save the token immediately after generation because GitHub will not display it again for security reasons."
+    },
+    {
+      q: "What happens if you lose your Personal Access Token?",
+      options: ["You can recover it from GitHub settings", "GitHub will email it to you", "You must generate a new one since it cannot be viewed again", "Your account gets locked"],
+      correct: 2,
+      explanation: "If you lose your PAT, you cannot recover it. You must generate a new token because GitHub only shows the token value once at creation time."
+    },
+    {
+      q: "PATs can be used instead of what?",
+      options: ["Git commands", "SSH keys for authentication", "Branch names", "Commit messages"],
+      correct: 1,
+      explanation: "Personal access tokens serve as an alternative to SSH keys for authenticating with GitHub, particularly for HTTPS-based operations."
+    },
+    // Questions 29-36: Git Fundamentals
+    {
+      q: "What command initializes a new Git repository?",
+      options: ["git start", "git create", "git init", "git new"],
+      correct: 2,
+      explanation: "The 'git init' command creates a new Git repository by initializing the .git directory in your project folder."
+    },
+    {
+      q: "What does 'git clone' do?",
+      options: ["Creates a new branch", "Creates a copy of an existing remote repository on your local machine", "Deletes a repository", "Merges two repositories"],
+      correct: 1,
+      explanation: "The 'git clone <url>' command creates a local copy of a remote repository, including all its files, branches, and commit history."
+    },
+    {
+      q: "What does 'git add .' do?",
+      options: ["Adds a new remote repository", "Stages all changes in the current directory for the next commit", "Creates a new file", "Adds a new branch"],
+      correct: 1,
+      explanation: "The 'git add .' command stages all changes (new, modified, and deleted files) in the current directory and its subdirectories for the next commit."
+    },
+    {
+      q: "What does 'git status' show?",
+      options: ["The commit history", "The state of the working directory and staging area", "The remote repository URL", "The branch comparison"],
+      correct: 1,
+      explanation: "The 'git status' command shows the state of the working directory and the staging area, indicating which changes have been staged and which have not."
+    },
+    {
+      q: "What is the correct order of basic Git operations?",
+      options: ["commit, add, push", "push, commit, add", "add, commit, push", "commit, push, add"],
+      correct: 2,
+      explanation: "The correct workflow is: 'git add' (stage changes), 'git commit' (save a snapshot), then 'git push' (upload to remote)."
+    },
+    {
+      q: "What does 'git pull' do?",
+      options: ["Pushes local changes to the remote", "Fetches and integrates changes from a remote repository", "Creates a pull request", "Removes a remote branch"],
+      correct: 1,
+      explanation: "The 'git pull' command fetches changes from a remote repository and integrates (merges) them into your current local branch."
+    },
+    {
+      q: "What flag is used to add a commit message inline?",
+      options: ["-c", "-msg", "-m", "--message-inline"],
+      correct: 2,
+      explanation: "The -m flag allows you to write a commit message directly on the command line, e.g., 'git commit -m \"Your message\"'."
+    },
+    {
+      q: "What does 'git push origin main' do?",
+      options: ["Pulls changes from the main branch", "Pushes local commits to the main branch on the remote named origin", "Creates a new branch called main", "Merges origin into main"],
+      correct: 1,
+      explanation: "The command 'git push origin main' uploads your local commits to the 'main' branch on the remote repository named 'origin'."
+    },
+    // Questions 37-44: Branching & Merging
+    {
+      q: "What is a Git branch?",
+      options: ["A copy of the entire repository", "An independent line of development", "A type of commit message", "A remote server connection"],
+      correct: 1,
+      explanation: "A branch is an independent line of development that lets you work on features, bug fixes, or experiments in isolation without affecting the main codebase."
+    },
+    {
+      q: "What command creates and switches to a new branch?",
+      options: ["git branch new-branch", "git checkout -b new-branch", "git switch --create new-branch && git checkout new-branch", "git new-branch create"],
+      correct: 1,
+      explanation: "The 'git checkout -b <branch-name>' command creates a new branch and immediately switches to it in one step."
+    },
+    {
+      q: "What is the difference between rebasing and merging?",
+      options: ["They are identical operations", "Merge preserves history with a merge commit; rebase replays commits for a linear history", "Rebase is for remote branches; merge is for local branches", "Merge deletes the source branch; rebase keeps it"],
+      correct: 1,
+      explanation: "Merge preserves the full history by creating a merge commit, while rebase rewrites commit history by replaying changes on top of the target branch for a clean, linear log."
+    },
+    {
+      q: "Which branching strategy uses short-lived feature branches merged frequently into main?",
+      options: ["Gitflow", "Trunk-Based Development", "Release branching", "Forking workflow"],
+      correct: 1,
+      explanation: "Trunk-Based Development uses short-lived feature branches merged frequently into the main branch, encouraging continuous integration and reducing merge conflicts."
+    },
+    {
+      q: "In Gitflow, what branch contains production-ready code?",
+      options: ["develop", "release", "main", "hotfix"],
+      correct: 2,
+      explanation: "In Gitflow, the 'main' branch always contains production-ready code, while 'develop' serves as the integration branch for features."
+    },
+    {
+      q: "What does 'git branch -d' do?",
+      options: ["Downloads a branch", "Displays branch details", "Deletes a branch", "Duplicates a branch"],
+      correct: 2,
+      explanation: "The 'git branch -d <branch-name>' command deletes the specified branch. The -d flag performs a safe delete, preventing deletion if the branch has unmerged changes."
+    },
+    {
+      q: "What does 'git merge' do?",
+      options: ["Splits a branch into two", "Integrates changes from one branch into the current branch", "Deletes the merged branch automatically", "Creates a new repository"],
+      correct: 1,
+      explanation: "The 'git merge' command integrates changes from a specified branch into your current branch, combining the work from both branches."
+    },
+    {
+      q: "In GitHub Flow, what is the main workflow?",
+      options: ["Use develop and release branches with scheduled deployments", "Create feature branches from main, open pull requests, then merge after review", "Commit directly to main without branches", "Fork the repository for every change"],
+      correct: 1,
+      explanation: "GitHub Flow is a simple, lightweight model: create feature branches from main, open pull requests for review, and merge back into main for continuous deployment."
+    },
+    // Questions 45-48: Pull Requests & Code Review
+    {
+      q: "What is a pull request?",
+      options: ["A command to download code from a remote repository", "A proposal to merge changes from one branch into another with code review", "A request to pull a branch from another developer's machine", "A way to revert commits"],
+      correct: 1,
+      explanation: "A pull request (PR) is a proposal to merge changes from one branch into another. It is the primary mechanism for code review and collaboration."
+    },
+    {
+      q: "What is the typical PR workflow?",
+      options: ["Commit to main, then create a branch", "Create branch, make changes, push, open PR, review, merge", "Fork the repo, delete main, create PR", "Pull from main, push to develop, merge to release"],
+      correct: 1,
+      explanation: "The typical PR workflow is: create a branch from main, make and commit changes, push the branch, open a PR, get code review, and merge after approval."
+    },
+    {
+      q: "During code review, what should reviewers focus on?",
+      options: ["Only checking for typos", "Correctness, security, and maintainability rather than just style", "Rewriting the entire code", "Counting the number of lines changed"],
+      correct: 1,
+      explanation: "Reviewers should focus on logic, correctness, security, and maintainability. Style issues should be handled by linters and formatters."
+    },
+    {
+      q: "What happens after a pull request is approved?",
+      options: ["It is automatically deleted", "The changes are merged into the target branch", "A new branch is created", "The repository is forked"],
+      correct: 1,
+      explanation: "After a pull request is approved by reviewers, the changes can be merged into the target branch (typically main), integrating the new code."
+    },
+    // Questions 49-50: Best Practices
+    {
+      q: "Which file tells Git which files to ignore?",
+      options: [".gitconfig", ".gitkeep", ".gitignore", ".gitmodules"],
+      correct: 2,
+      explanation: "The .gitignore file specifies which files and directories Git should ignore, such as secrets, credentials, node_modules, and build artifacts."
+    },
+    {
+      q: "What is semantic versioning?",
+      options: ["A way to name branches", "A versioning scheme using MAJOR.MINOR.PATCH format (e.g., v1.0.0)", "A type of commit message format", "A method for naming repositories"],
+      correct: 1,
+      explanation: "Semantic versioning uses a MAJOR.MINOR.PATCH format (e.g., v1.0.0, v1.1.0) to clearly communicate the nature of changes in each release."
+    }
+  ];
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  let quizQuestions, currentQ, score, answered;
+
+  function initQuiz() {
+    quizQuestions = shuffle(QUESTIONS).slice(0, 10);
+    currentQ = 0;
+    score = 0;
+    answered = false;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizQuestions[currentQ];
+    const letters = ['A', 'B', 'C', 'D'];
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = `
+      <div class="quiz-header">
+        <span class="quiz-counter">Question ${currentQ + 1} / 10</span>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" style="width:${(currentQ / 10) * 100}%"></div></div>
+        <span class="quiz-score">Score: ${score}/10</span>
+      </div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt, i) => `
+          <div class="quiz-option" onclick="selectAnswer(${i})" data-idx="${i}">
+            <span class="opt-letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div id="quiz-feedback"></div>
+      <div class="quiz-nav" id="quiz-nav" style="display:none">
+        <button class="quiz-next-btn" onclick="${currentQ < 9 ? 'currentQ++;renderQuestion()' : 'showResults()'}">
+          ${currentQ < 9 ? 'Next Question \u2192' : 'See Results'}
+        </button>
+      </div>
+    `;
+    answered = false;
+  }
+
+  function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const q = quizQuestions[currentQ];
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.classList.add('disabled'));
+    if (idx === q.correct) {
+      score++;
+      options[idx].classList.add('correct');
+    } else {
+      options[idx].classList.add('wrong');
+      options[q.correct].classList.add('correct');
+    }
+    document.getElementById('quiz-feedback').innerHTML = `<div class="quiz-explanation">${q.explanation}</div>`;
+    document.getElementById('quiz-nav').style.display = 'flex';
+    document.querySelector('.quiz-score').textContent = 'Score: ' + score + '/10';
+  }
+
+  function showResults() {
+    const passed = score >= 7;
+    document.getElementById('quiz-container').innerHTML = `
+      <div class="quiz-results">
+        <div class="score-circle ${passed ? 'pass' : 'fail'}">${score}/10</div>
+        <div class="result-msg">${passed ? 'Great job!' : 'Keep learning!'}</div>
+        <div class="result-sub">${passed ? 'You have a solid understanding of Git & Version Control.' : 'Review the content above and try again.'}</div>
+        <button class="quiz-restart-btn" onclick="initQuiz()">Retake Quiz</button>
+      </div>
+    `;
+  }
+
+  initQuiz();
 </script>
 </body>
 </html>
