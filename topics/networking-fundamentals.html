@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Networking Fundamentals &mdash; DevOps Easy Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/shared.css"/>
+<style>
+  /* ── Nav ─────────────────────────────────────────────── */
+  .top-nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,14,0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px;
+    z-index: 100;
+  }
+  .top-nav .brand {
+    font-weight: 700; font-size: 15px; color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .top-nav .back-link {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-dim);
+    transition: color 0.2s;
+  }
+  .top-nav .back-link:hover { color: var(--text); }
+
+  /* ── Layout ──────────────────────────────────────────── */
+  .page-wrapper {
+    position: relative; z-index: 1;
+    display: flex;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding-top: 56px;
+  }
+
+  /* ── Sidebar / TOC ───────────────────────────────────── */
+  .sidebar {
+    position: sticky; top: 72px; align-self: flex-start;
+    width: 230px; min-width: 230px;
+    padding: 32px 0 32px 28px;
+    height: calc(100vh - 72px);
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); margin-bottom: 14px;
+  }
+  .sidebar ul { list-style: none; }
+  .sidebar li { margin-bottom: 2px; }
+  .sidebar a {
+    display: block; padding: 6px 12px;
+    font-size: 13px; color: var(--text-dim);
+    border-radius: 6px; transition: background 0.15s, color 0.15s;
+    line-height: 1.45;
+  }
+  .sidebar a:hover { background: var(--surface2); color: var(--text); }
+  .sidebar a.active { color: var(--tier-found); background: var(--tier-found-bg); }
+
+  /* Mobile TOC toggle */
+  .toc-toggle {
+    display: none;
+    position: fixed; bottom: 24px; right: 24px;
+    width: 48px; height: 48px;
+    border-radius: 50%; border: 1px solid var(--border-light);
+    background: var(--surface); color: var(--text);
+    font-size: 20px; cursor: pointer; z-index: 200;
+    align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .toc-mobile-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 150;
+  }
+  .toc-mobile-overlay.open { display: block; }
+  .toc-mobile-panel {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    max-height: 65vh; overflow-y: auto;
+    background: var(--surface);
+    border-top: 1px solid var(--border-light);
+    border-radius: 18px 18px 0 0;
+    padding: 24px 20px 32px;
+    z-index: 200;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+  .toc-mobile-panel.open { display: block; transform: translateY(0); }
+
+  /* ── Main content ────────────────────────────────────── */
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 0 36px 80px;
+  }
+
+  /* ── Hero ─────────────────────────────────────────────── */
+  .hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .hero-icon {
+    font-size: 44px; margin-bottom: 16px;
+    display: inline-block;
+  }
+  .hero h1 {
+    font-size: 36px; font-weight: 700;
+    letter-spacing: -0.03em; margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .tier-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 8px;
+    background: rgba(245,158,11,0.10);
+    color: var(--tier-found);
+    border: 1px solid var(--tier-found-border);
+    margin-bottom: 16px;
+  }
+  .hero .subtitle {
+    font-size: 16px; color: var(--text-dim);
+    line-height: 1.65; max-width: 600px;
+  }
+
+  /* ── Section styling ─────────────────────────────────── */
+  .section {
+    margin-bottom: 56px;
+    scroll-margin-top: 80px;
+  }
+  .section h2 {
+    font-size: 24px; font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .section h3 {
+    font-size: 18px; font-weight: 600;
+    margin: 28px 0 14px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .section p {
+    font-size: 15px; line-height: 1.75;
+    color: var(--text-dim); margin-bottom: 14px;
+  }
+  .section ul, .section ol {
+    padding-left: 20px; margin-bottom: 16px;
+  }
+  .section li {
+    font-size: 15px; line-height: 1.75;
+    color: var(--text-dim); margin-bottom: 6px;
+  }
+  .section li strong { color: var(--text); }
+
+  /* ── Info cards (for step-by-step) ────────────────────── */
+  .step-cards {
+    display: flex; flex-direction: column; gap: 10px;
+    margin: 16px 0 24px;
+  }
+  .step-card {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+    transition: border-color 0.2s;
+  }
+  .step-card:hover { border-color: var(--border-light); }
+  .step-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(245,158,11,0.10);
+    color: var(--tier-found);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--tier-found-border);
+  }
+  .step-card p { margin: 0; font-size: 14px; }
+
+  /* ── Code blocks ─────────────────────────────────────── */
+  .code-block-wrapper {
+    position: relative;
+    margin: 16px 0 24px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .code-block-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--text-muted);
+  }
+  .copy-btn {
+    background: none; border: 1px solid var(--border-light);
+    color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 3px 10px; border-radius: 5px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .copy-btn:hover {
+    background: var(--surface2); color: var(--text);
+    border-color: var(--text-muted);
+  }
+  .code-block-wrapper pre {
+    margin: 0; padding: 18px 20px;
+    background: var(--bg);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .code-block-wrapper code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.7;
+    color: var(--text);
+  }
+  .code-block-wrapper code .comment {
+    color: var(--text-muted);
+  }
+  .code-block-wrapper code .cmd {
+    color: var(--tier-found);
+  }
+  .code-block-wrapper code .flag {
+    color: var(--tier-core);
+  }
+  .code-block-wrapper code .str {
+    color: var(--tier-adv);
+  }
+
+  /* Inline code */
+  .content :not(pre) > code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    color: var(--tier-found);
+  }
+
+  /* ── Callout boxes ──────────────────────────────────── */
+  .callout {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+    border: 1px solid;
+    display: flex;
+    gap: 12px;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.4; }
+  .callout-content { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
+  .callout-tip { background: rgba(16, 185, 129, 0.06); border-color: rgba(16, 185, 129, 0.15); }
+  .callout-info { background: rgba(99, 102, 241, 0.06); border-color: rgba(99, 102, 241, 0.15); }
+  .callout-warning { background: rgba(245, 158, 11, 0.06); border-color: rgba(245, 158, 11, 0.15); }
+
+  /* ── Comparison table ───────────────────────────────── */
+  .compare-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 16px 0 24px;
+  }
+  .compare-table th, .compare-table td {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table th {
+    background: var(--surface);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .compare-table td { color: var(--text-dim); line-height: 1.6; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: var(--surface); }
+
+  /* ── Card grid ──────────────────────────────────────── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 16px 0 24px;
+  }
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .info-card:hover { border-color: var(--border-light); }
+  .info-card h4 {
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 8px; color: var(--text);
+  }
+  .info-card p {
+    font-size: 13px; color: var(--text-dim);
+    line-height: 1.6; margin: 0;
+  }
+
+  /* ── Flow diagram ───────────────────────────────────── */
+  .flow-diagram {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; flex-wrap: wrap;
+    margin: 16px 0 24px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .flow-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    background: var(--surface2);
+    color: var(--text-dim);
+    white-space: nowrap;
+    text-align: center;
+  }
+  .flow-arrow { color: var(--text-muted); font-size: 14px; }
+
+  /* ── Resources ───────────────────────────────────────── */
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .resource-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    transition: border-color 0.2s, background 0.2s;
+    display: block;
+    text-decoration: none;
+  }
+  .resource-card:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+  }
+  .resource-card .res-title {
+    font-size: 14px; font-weight: 600;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .resource-card .res-desc {
+    font-size: 12px; color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── Footer nav ──────────────────────────────────────── */
+  .footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 16px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    margin-top: 56px;
+  }
+  .footer-link {
+    flex: 1;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 20px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .footer-link:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+  }
+  .footer-link.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .footer-link .fl-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .footer-link .fl-title {
+    font-size: 15px; font-weight: 600; color: var(--text);
+  }
+  .footer-link.disabled .fl-title { color: var(--text-muted); }
+  .footer-link.next { text-align: right; }
+
+  /* ── Responsive ──────────────────────────────────────── */
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    .toc-toggle { display: flex; }
+    .content { padding: 0 20px 80px; }
+    .hero h1 { font-size: 28px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .top-nav { padding: 0 16px; }
+    .top-nav .brand { font-size: 13px; }
+    .content { padding: 0 14px 80px; }
+    .hero { padding: 36px 0 28px; }
+    .hero h1 { font-size: 24px; }
+    .hero .subtitle { font-size: 14px; }
+    .section h2 { font-size: 20px; }
+    .footer-nav { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- ── Top Navigation ──────────────────────────────────── -->
+<nav class="top-nav">
+  <span class="brand">DevOps Easy Learning</span>
+  <a href="../index.html" class="back-link">&#8592; Back to Roadmap</a>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ── Sidebar / Table of Contents ───────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-title">On this page</div>
+    <ul>
+      <li><a href="#ssh">SSH &amp; SSH Keys</a></li>
+      <li><a href="#dns-certificates">DNS &amp; Certificates</a></li>
+      <li><a href="#http-https">HTTP vs HTTPS</a></li>
+      <li><a href="#ssl-tls">SSL vs TLS</a></li>
+      <li><a href="#mtls">mTLS (Mutual TLS)</a></li>
+      <li><a href="#apis">APIs</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </aside>
+
+  <!-- ── Main Content ──────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-icon">&#x1F310;</div>
+      <h1>Networking Fundamentals</h1>
+      <div class="tier-badge">Tier 1 &middot; Foundations</div>
+      <p class="subtitle">SSH, DNS, certificates, HTTP/HTTPS, SSL/TLS, mTLS, and APIs &mdash; the networking and security foundations every DevOps engineer needs.</p>
+    </header>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 1: SSH & SSH Keys -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="ssh" class="section">
+      <h2>SSH &amp; SSH Keys</h2>
+      <p><strong>SSH (Secure Shell)</strong> is a cryptographic network protocol used to securely connect to remote servers. It encrypts all communication between your machine and the server, preventing eavesdropping and tampering. SSH operates on <strong>port 22</strong> by default and is formalized in IETF standards (RFC 4251&ndash;4254).</p>
+      <p>The SSH protocol is built on three layers:</p>
+      <ul>
+        <li><strong>Transport Layer</strong> &mdash; Handles <span class="term">symmetric encryption<span class="tip">A type of encryption where the same key is used to both encrypt and decrypt data. Fast and efficient for bulk data transfer.</span></span>, key exchange, and server authentication. Ensures data integrity.</li>
+        <li><strong>Authentication Layer</strong> &mdash; Verifies the user&rsquo;s identity via passwords, public keys, or other methods.</li>
+        <li><strong>Connection Layer</strong> &mdash; Multiplexes the encrypted tunnel into logical channels for shell sessions, port forwarding, and <span class="term">SFTP<span class="tip">SSH File Transfer Protocol &mdash; a secure file transfer protocol that runs over an SSH connection. Replaces insecure FTP.</span></span>.</li>
+      </ul>
+
+      <h3>What is an SSH Key?</h3>
+      <p>An SSH key is a way to authenticate without passwords. Instead of typing a password each time, you use <span class="term">asymmetric encryption<span class="tip">A cryptographic system using two mathematically linked keys: a public key (shared freely) and a private key (kept secret). Data encrypted with one can only be decrypted by the other.</span></span> &mdash; a mathematically related public key and private key. This approach is more secure than passwords because the private key never travels over the network.</p>
+
+      <h3>Two Parts of an SSH Key</h3>
+      <ul>
+        <li><strong>Public Key</strong> &mdash; Shared with servers you want to access. Think of it like a padlock you can distribute freely.</li>
+        <li><strong>Private Key</strong> &mdash; Kept secret on your local machine. This is the only key that can &ldquo;unlock&rdquo; data encrypted with the matching public key.</li>
+      </ul>
+
+      <div class="callout callout-warning">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div class="callout-content"><strong>Never share your private key.</strong> Only the public key (<code>id_rsa.pub</code>) goes on remote servers. If your private key is compromised, regenerate your key pair immediately.</div>
+      </div>
+
+      <h3>How SSH Keys Work</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p><strong>Client contacts server</strong> &mdash; Your machine requests an SSH connection to the remote server.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p><strong>Server sends its public key</strong> &mdash; The server identifies itself so you can verify you&rsquo;re connecting to the right host.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p><strong>Parameters negotiated</strong> &mdash; Both sides agree on encryption algorithms and establish a secure, encrypted channel.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p><strong>Client authenticates</strong> &mdash; You prove your identity using your private key. No password is transmitted over the network.</p>
+        </div>
+      </div>
+
+      <h3>SSH Key Algorithms</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Algorithm</th>
+            <th>Key Size</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>RSA</strong></td>
+            <td>2048&ndash;4096 bits</td>
+            <td>Established and widely supported. Use 4096 bits minimum for new keys.</td>
+          </tr>
+          <tr>
+            <td><strong>ECDSA</strong></td>
+            <td>256, 384, or 521 bits</td>
+            <td>Elliptic curve standard. 521 bits preferred. Smaller keys than RSA for equivalent strength.</td>
+          </tr>
+          <tr>
+            <td><strong>Ed25519</strong></td>
+            <td>Fixed (256-bit curve)</td>
+            <td>Modern and fastest. Recommended for new setups where client support is available.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Generating SSH Keys</h3>
+      <p>Use the <code>ssh-keygen</code> command to create a new key pair:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span>bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="comment"># Generate a 4096-bit RSA key</span>
+<span class="cmd">ssh-keygen</span> <span class="flag">-t rsa</span> <span class="flag">-b 4096</span> <span class="flag">-C</span> <span class="str">"your_email@example.com"</span>
+
+<span class="comment"># Generate a modern Ed25519 key (recommended)</span>
+<span class="cmd">ssh-keygen</span> <span class="flag">-t ed25519</span> <span class="flag">-C</span> <span class="str">"your_email@example.com"</span>
+
+<span class="comment"># Generate a key with a custom filename</span>
+<span class="cmd">ssh-keygen</span> <span class="flag">-t ed25519</span> <span class="flag">-f</span> <span class="str">~/.ssh/my_project_key</span></code></pre>
+      </div>
+
+      <h3>Key File Locations</h3>
+      <p>SSH keys are stored in the <code>~/.ssh</code> directory:</p>
+      <ul>
+        <li><strong><code>~/.ssh/id_rsa</code></strong> &mdash; Your private key (never share this)</li>
+        <li><strong><code>~/.ssh/id_rsa.pub</code></strong> &mdash; Your public key (copy this to servers)</li>
+        <li><strong><code>~/.ssh/authorized_keys</code></strong> &mdash; On the server, lists public keys allowed to connect</li>
+        <li><strong><code>~/.ssh/known_hosts</code></strong> &mdash; Records fingerprints of servers you&rsquo;ve connected to before</li>
+      </ul>
+
+      <h3>Why Use SSH Keys?</h3>
+      <ul>
+        <li><strong>More secure</strong> &mdash; Keys are much harder to brute-force than passwords</li>
+        <li><strong>No password needed</strong> &mdash; Enables automated, unattended connections</li>
+        <li><strong>Essential for DevOps</strong> &mdash; Used in CI/CD pipelines, server management, Git authentication, and automation</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 2: DNS & Certificates -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="dns-certificates" class="section">
+      <h2>DNS &amp; Certificates</h2>
+
+      <h3>What is a Certificate?</h3>
+      <p>A <strong>digital certificate</strong> is an electronic document that proves the identity of a server. It&rsquo;s used in HTTPS to ensure you&rsquo;re communicating with the legitimate server and not an imposter. Certificates are issued by trusted <span class="term">Certificate Authorities (CAs)<span class="tip">A trusted organization that issues digital certificates. Examples include Let&rsquo;s Encrypt, DigiCert, and Comodo. CAs verify the identity of certificate applicants before issuing.</span></span>.</p>
+
+      <h3>Types of Certificates</h3>
+      <div class="card-grid">
+        <div class="info-card">
+          <h4>Root Certificate</h4>
+          <p>The top-level trusted certificate. Stored in your OS and browser. Issued by a Certificate Authority like DigiCert or Let&rsquo;s Encrypt.</p>
+        </div>
+        <div class="info-card">
+          <h4>Intermediate Certificate</h4>
+          <p>A bridge between the root and server certificate. Improves security by keeping the root CA offline. Signed by the root CA.</p>
+        </div>
+        <div class="info-card">
+          <h4>Server Certificate</h4>
+          <p>Issued to a specific domain (e.g., example.com). Installed on the web server. This is the certificate used for HTTPS connections.</p>
+        </div>
+      </div>
+
+      <h3>Certificate Chain of Trust</h3>
+      <p>When your browser validates a certificate, it follows the chain from server to root:</p>
+      <div class="flow-diagram">
+        <div class="flow-item">Server Certificate</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">Intermediate CA</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">Root CA</div>
+      </div>
+      <p>The browser validates the entire chain. If any link is broken, untrusted, or expired, the connection is rejected.</p>
+
+      <h3>What is DNS?</h3>
+      <p><strong>DNS (Domain Name System)</strong> is a hierarchical, decentralized naming system that translates human-readable domain names into IP addresses. Without DNS, you&rsquo;d have to memorize addresses like <code>142.250.x.x</code> to visit Google.</p>
+
+      <h3>How DNS Resolution Works</h3>
+      <p>When you type a URL into your browser, a multi-step lookup finds the server&rsquo;s IP address:</p>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p><strong>Browser cache</strong> &mdash; Checks if the domain was recently resolved and is still within its <span class="term">TTL<span class="tip">Time To Live &mdash; the duration (in seconds) a DNS record is cached before the resolver must query again. Low TTL = fresher data but more DNS traffic. Typical values: 300s&ndash;86400s.</span></span>.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p><strong>OS cache</strong> &mdash; The operating system checks its own DNS cache and the <code>/etc/hosts</code> file.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p><strong><span class="term">Recursive resolver<span class="tip">A DNS server (usually run by your ISP or services like 8.8.8.8 / 1.1.1.1) that does the heavy lifting of walking the DNS hierarchy on your behalf.</span></span></strong> &mdash; Your ISP&rsquo;s DNS server (or a public resolver like 1.1.1.1) begins querying the hierarchy.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p><strong>Root nameserver</strong> &mdash; Directs the resolver to the correct <span class="term">TLD<span class="tip">Top-Level Domain &mdash; the last segment of a domain name (.com, .org, .io, .dev). Each TLD has its own set of authoritative nameservers.</span></span> server (e.g., the <code>.com</code> servers).</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p><strong>TLD nameserver</strong> &mdash; Returns the authoritative nameserver for the specific domain.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <p><strong>Authoritative nameserver</strong> &mdash; Returns the final IP address. The result is cached at each level according to the record&rsquo;s TTL.</p>
+        </div>
+      </div>
+
+      <h3>Common DNS Record Types</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Record</th>
+            <th>Purpose</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A</strong></td>
+            <td>Maps domain to an IPv4 address</td>
+            <td>example.com &rarr; 192.168.1.1</td>
+          </tr>
+          <tr>
+            <td><strong>AAAA</strong></td>
+            <td>Maps domain to an IPv6 address</td>
+            <td>example.com &rarr; 2001:0db8:85a3::8a2e:0370:7334</td>
+          </tr>
+          <tr>
+            <td><strong>CNAME</strong></td>
+            <td>Maps domain to another domain (alias)</td>
+            <td>www.example.com &rarr; example.com</td>
+          </tr>
+          <tr>
+            <td><strong>MX</strong></td>
+            <td>Specifies mail server for email routing</td>
+            <td>example.com &rarr; mail.example.com</td>
+          </tr>
+          <tr>
+            <td><strong>TXT</strong></td>
+            <td>Stores text information for verification</td>
+            <td>SPF, DKIM, domain ownership (Google, AWS)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>How DNS + Certificates Work Together</h3>
+      <p>DNS and certificates are complementary. Here&rsquo;s what happens when you visit <code>https://example.com</code>:</p>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p><strong>DNS resolves the IP</strong> &mdash; Your browser queries DNS to find the server&rsquo;s IP address.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p><strong>Server presents its certificate</strong> &mdash; The server sends its TLS certificate to prove its identity.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p><strong>Browser validates the chain</strong> &mdash; The certificate chain is checked against trusted root CAs.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p><strong>Secure connection established</strong> &mdash; An encrypted HTTPS session begins.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div class="callout-content"><strong>Best practices:</strong> Keep DNS records updated, use the correct record type for each purpose, and monitor certificate expiration dates to avoid outages.</div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 3: HTTP vs HTTPS -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="http-https" class="section">
+      <h2>HTTP vs HTTPS</h2>
+
+      <h3>What is HTTP?</h3>
+      <p><strong>HTTP (HyperText Transfer Protocol)</strong> is the foundation of data communication on the web. It&rsquo;s a <span class="term">stateless<span class="tip">Each HTTP request is independent &mdash; the server does not remember previous requests. State is maintained through cookies, tokens, or session IDs sent with each request.</span></span> client-server protocol that defines how messages are formatted and transmitted. However, HTTP sends data in <strong>plain text</strong>, meaning anyone intercepting the traffic can read it. HTTP uses <strong>port 80</strong>.</p>
+
+      <h3>HTTP Request &amp; Response</h3>
+      <p>Every HTTP interaction follows a request/response cycle:</p>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span>http request</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cmd">GET</span> <span class="str">/api/users</span> <span class="flag">HTTP/1.1</span>
+<span class="comment">Host: example.com</span>
+<span class="comment">Accept: application/json</span></code></pre>
+      </div>
+      <div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span>http response</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="flag">HTTP/1.1</span> <span class="cmd">200 OK</span>
+<span class="comment">Content-Type: application/json</span>
+<span class="comment">Content-Length: 42</span>
+
+<span class="str">{"id": 1, "name": "Alice"}</span></code></pre>
+      </div>
+
+      <h3>What is HTTPS?</h3>
+      <p><strong>HTTPS (HTTP Secure)</strong> is HTTP with encryption. It uses <strong>SSL/TLS</strong> protocols to encrypt all data in transit, ensuring confidentiality, integrity, and authentication. HTTPS uses <strong>port 443</strong> and requires a valid TLS certificate.</p>
+
+      <h3>How HTTPS Works</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p><strong>User connects to site</strong> &mdash; The browser initiates a connection to the server on port 443.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p><strong>Server sends certificate</strong> &mdash; The server presents its TLS certificate containing its public key.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p><strong>Browser verifies</strong> &mdash; The browser checks the certificate against trusted CAs and validates the domain.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p><strong>Encrypted connection starts</strong> &mdash; A symmetric session key is negotiated and all subsequent data is encrypted.</p>
+        </div>
+      </div>
+
+      <h3>HTTP vs HTTPS Comparison</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>HTTP</th>
+            <th>HTTPS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Encryption</strong></td>
+            <td>None &mdash; plain text</td>
+            <td>SSL/TLS encryption</td>
+          </tr>
+          <tr>
+            <td><strong>Port</strong></td>
+            <td>80</td>
+            <td>443</td>
+          </tr>
+          <tr>
+            <td><strong>URL prefix</strong></td>
+            <td>http://</td>
+            <td>https://</td>
+          </tr>
+          <tr>
+            <td><strong>Certificate</strong></td>
+            <td>Not required</td>
+            <td>TLS certificate required</td>
+          </tr>
+          <tr>
+            <td><strong>Data safety</strong></td>
+            <td>Vulnerable to interception</td>
+            <td>Encrypted in transit</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>HTTP Status Codes</h3>
+      <p>Servers respond with numeric codes indicating the result of a request:</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Code</th><th>Name</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>200</strong></td><td>OK</td><td>Request succeeded</td></tr>
+          <tr><td><strong>201</strong></td><td>Created</td><td>New resource created (after POST/PUT)</td></tr>
+          <tr><td><strong>301</strong></td><td>Moved Permanently</td><td>Resource URL has permanently changed</td></tr>
+          <tr><td><strong>304</strong></td><td>Not Modified</td><td>Cached version is still valid</td></tr>
+          <tr><td><strong>400</strong></td><td>Bad Request</td><td>Malformed request syntax</td></tr>
+          <tr><td><strong>401</strong></td><td>Unauthorized</td><td>Authentication required</td></tr>
+          <tr><td><strong>403</strong></td><td>Forbidden</td><td>Server refuses &mdash; you lack permission</td></tr>
+          <tr><td><strong>404</strong></td><td>Not Found</td><td>Resource does not exist at this URL</td></tr>
+          <tr><td><strong>500</strong></td><td>Internal Server Error</td><td>Generic server-side failure</td></tr>
+          <tr><td><strong>502</strong></td><td>Bad Gateway</td><td>Gateway received invalid upstream response</td></tr>
+          <tr><td><strong>503</strong></td><td>Service Unavailable</td><td>Server is overloaded or in maintenance</td></tr>
+        </tbody>
+      </table>
+
+      <h3>HTTP Versions</h3>
+      <div class="flow-diagram">
+        <div class="flow-item">HTTP/1.0<br><small>New connection per request</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">HTTP/1.1<br><small>Persistent connections</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">HTTP/2<br><small>Multiplexing, header compression</small></div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">HTTP/3<br><small>QUIC (UDP-based)</small></div>
+      </div>
+
+      <h3>Why HTTPS Matters</h3>
+      <ul>
+        <li><strong>Protects passwords &amp; data</strong> &mdash; Encrypts sensitive information like login credentials, payment details, and personal data</li>
+        <li><strong>Prevents attacks</strong> &mdash; Stops man-in-the-middle attacks where attackers intercept or modify traffic</li>
+        <li><strong>Required for modern apps</strong> &mdash; Browsers flag HTTP sites as &ldquo;Not Secure,&rdquo; many APIs require HTTPS, and it&rsquo;s an SEO ranking factor</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 4: SSL vs TLS -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="ssl-tls" class="section">
+      <h2>SSL vs TLS</h2>
+
+      <h3>What is a Protocol?</h3>
+      <p>A <strong>protocol</strong> is a set of rules that tells systems how to communicate with each other. It defines how data is sent, received, and secured. Common examples include HTTP (websites), HTTPS (secure websites), SSH (remote server access), and FTP (file transfers).</p>
+
+      <h3>What is SSL?</h3>
+      <p><strong>SSL (Secure Sockets Layer)</strong> was the original protocol for encrypting internet communications. Developed by Netscape in the mid-1990s, SSL is now <strong>deprecated</strong> due to known security vulnerabilities and weak encryption. It is no longer recommended for use.</p>
+
+      <h3>What is TLS?</h3>
+      <p><strong>TLS (Transport Layer Security)</strong> is the modern, secure replacement for SSL. It provides stronger encryption, better performance, and is the protocol actually used behind HTTPS today. The current version is TLS 1.3.</p>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#8505;&#65039;</span>
+        <div class="callout-content">When people say &ldquo;SSL&rdquo; today, they almost always mean TLS. The term &ldquo;SSL certificate&rdquo; persists in common usage even though the SSL protocol itself has been deprecated since 2015. The current standards are defined in <strong>RFC 5246</strong> (TLS 1.2) and <strong>RFC 8446</strong> (TLS 1.3).</div>
+      </div>
+
+      <div class="callout callout-warning">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div class="callout-content"><strong>Browser enforcement:</strong> All major browsers dropped support for TLS 1.0 and 1.1 in 2020 (Firefox 74+, Chrome 84+, Safari 13.1+). Servers must support TLS 1.2 or 1.3 to remain accessible.</div>
+      </div>
+
+      <h3>SSL vs TLS Comparison</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Aspect</th>
+            <th>SSL</th>
+            <th>TLS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Status</strong></td>
+            <td>Deprecated</td>
+            <td>Active standard</td>
+          </tr>
+          <tr>
+            <td><strong>Security</strong></td>
+            <td>Known vulnerabilities</td>
+            <td>Stronger encryption</td>
+          </tr>
+          <tr>
+            <td><strong>Performance</strong></td>
+            <td>Slower handshake</td>
+            <td>Faster (TLS 1.3: 1-RTT)</td>
+          </tr>
+          <tr>
+            <td><strong>Used in</strong></td>
+            <td>Legacy systems only</td>
+            <td>HTTPS, email, VPNs</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>How TLS Works &mdash; The Handshake</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p><strong>Client Hello</strong> &mdash; Sends supported TLS versions and <span class="term">cipher suites<span class="tip">A set of cryptographic algorithms negotiated during the TLS handshake. Specifies which algorithms to use for key exchange, bulk encryption, and message authentication.</span></span> to the server.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p><strong>Server Hello</strong> &mdash; Chooses a cipher suite and sends its certificate.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p><strong>Client verifies</strong> &mdash; Validates the server&rsquo;s certificate against trusted CAs.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p><strong>Keys exchanged</strong> &mdash; Both sides generate symmetric session keys using <span class="term">forward secrecy<span class="tip">A property ensuring that session keys cannot be compromised even if the server&rsquo;s long-term private key is later exposed. Each session uses unique ephemeral keys.</span></span>.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p><strong>Secure session created</strong> &mdash; All subsequent communication is encrypted with the session keys.</p>
+        </div>
+      </div>
+
+      <h3>TLS 1.2 vs TLS 1.3</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Feature</th><th>TLS 1.2</th><th>TLS 1.3</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Handshake</strong></td>
+            <td>2 <span class="term">round-trips (RTT)<span class="tip">Round-Trip Time &mdash; the time it takes for a message to travel from client to server and back. Fewer RTTs mean faster connection setup.</span></span></td>
+            <td>1 RTT (with 0-RTT resumption for returning clients)</td>
+          </tr>
+          <tr>
+            <td><strong>Cipher suites</strong></td>
+            <td>Supports legacy ciphers (some weak)</td>
+            <td>Removed all insecure ciphers; only strong defaults</td>
+          </tr>
+          <tr>
+            <td><strong>Forward secrecy</strong></td>
+            <td>Optional</td>
+            <td>Mandatory for all connections</td>
+          </tr>
+          <tr>
+            <td><strong>Adoption</strong></td>
+            <td>Widely deployed since 2008</td>
+            <td>Standard since 2018; rapidly adopted</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 5: mTLS (Mutual TLS) -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="mtls" class="section">
+      <h2>mTLS (Mutual TLS)</h2>
+      <p><strong>Mutual TLS (mTLS)</strong> is a security protocol where <em>both</em> the client and server authenticate each other using certificates. In standard TLS, only the server proves its identity. In mTLS, both sides must present and verify certificates before communication can begin.</p>
+
+      <h3>How mTLS Works</h3>
+      <div class="step-cards">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <p><strong>Client connects to server</strong></p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <p><strong>Server sends its certificate</strong> &mdash; Just like in standard TLS.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <p><strong>Client verifies the server</strong> &mdash; Checks the server&rsquo;s certificate against trusted CAs.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <p><strong>Client sends its certificate</strong> &mdash; This is the &ldquo;mutual&rdquo; part &mdash; the client also proves its identity.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <p><strong>Server verifies the client</strong> &mdash; Checks the client&rsquo;s certificate against its trusted CA list.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <p><strong>Secure connection established</strong> &mdash; Both sides are mutually authenticated; encrypted communication begins.</p>
+        </div>
+      </div>
+
+      <h3>Where is mTLS Used?</h3>
+      <div class="card-grid">
+        <div class="info-card">
+          <h4>Microservices</h4>
+          <p>Service-to-service communication in Kubernetes clusters, managed by <span class="term">service meshes<span class="tip">Infrastructure layers (e.g., Istio, Linkerd) that inject sidecar proxies alongside each service. These proxies handle mTLS transparently &mdash; applications don&rsquo;t manage certificates themselves.</span></span> like Istio or Linkerd.</p>
+        </div>
+        <div class="info-card">
+          <h4>Internal APIs</h4>
+          <p>B2B integrations and internal API gateways where both parties must verify each other&rsquo;s identity.</p>
+        </div>
+        <div class="info-card">
+          <h4>Banking Systems</h4>
+          <p>High-security financial systems where regulatory compliance demands strong mutual authentication.</p>
+        </div>
+        <div class="info-card">
+          <h4>Zero Trust Security</h4>
+          <p>Zero trust architectures where no connection is trusted by default &mdash; every request must be authenticated.</p>
+        </div>
+      </div>
+
+      <h3>TLS vs mTLS Comparison</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>TLS</th>
+            <th>mTLS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Encryption</strong></td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong>Server authenticated</strong></td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong>Client authenticated</strong></td>
+            <td>No (uses passwords/tokens)</td>
+            <td>Yes (via certificate)</td>
+          </tr>
+          <tr>
+            <td><strong>Security level</strong></td>
+            <td>Medium</td>
+            <td>High</td>
+          </tr>
+          <tr>
+            <td><strong>Complexity</strong></td>
+            <td>Simple</td>
+            <td>More complex (requires client cert management)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-info">
+        <span class="callout-icon">&#8505;&#65039;</span>
+        <div class="callout-content"><strong>When to use each:</strong> Use TLS for public websites, basic API security, and login/password systems. Use mTLS for microservices, internal APIs, banking/high-security systems, and <span class="term">zero trust<span class="tip">A security model that assumes no user, device, or network is inherently trusted. Every request must be verified, authenticated, and authorized &mdash; even from inside the corporate network.</span></span> architectures.</div>
+      </div>
+
+      <div class="callout callout-warning">
+        <span class="callout-icon">&#9888;&#65039;</span>
+        <div class="callout-content"><strong>Certificate management overhead:</strong> mTLS requires infrastructure to issue, distribute, rotate, and revoke client certificates. Large organizations can accumulate millions of certificates &mdash; a <span class="term">Certificate Authority (CA)<span class="tip">In mTLS contexts, often an internal/private CA (not a public CA like Let&rsquo;s Encrypt). Tools like HashiCorp Vault, cert-manager, or SPIFFE/SPIRE automate certificate lifecycle management.</span></span> and automation tooling are essential.</div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Section 6: APIs -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="apis" class="section">
+      <h2>APIs (Application Programming Interfaces)</h2>
+      <p>An <strong>API (Application Programming Interface)</strong> is a bridge that allows two applications to communicate with each other. When a mobile app fetches weather data, when a website processes a payment, or when a CI/CD pipeline triggers a deployment &mdash; APIs make it happen.</p>
+
+      <h3>How APIs Work</h3>
+      <div class="flow-diagram">
+        <div class="flow-item">Client sends request</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">API processes</div>
+        <span class="flow-arrow">&rarr;</span>
+        <div class="flow-item">Server responds with data</div>
+      </div>
+
+      <h3>Types of APIs</h3>
+      <div class="card-grid">
+        <div class="info-card">
+          <h4>REST API</h4>
+          <p>The most common type. Uses standard HTTP methods, <span class="term">stateless<span class="tip">Each request contains all the information needed to process it. The server does not store client state between requests.</span></span>, returns JSON. Key constraints: client-server separation, cacheability, and uniform interface.</p>
+        </div>
+        <div class="info-card">
+          <h4>SOAP API</h4>
+          <p>XML-based protocol with strict contracts (WSDL). Used in enterprise and legacy systems requiring formal specifications.</p>
+        </div>
+        <div class="info-card">
+          <h4>GraphQL API</h4>
+          <p>Query language where clients request exactly the data they need. Reduces over-fetching and under-fetching.</p>
+        </div>
+        <div class="info-card">
+          <h4>WebSocket API</h4>
+          <p>Full-duplex, real-time communication. Used for chat apps, live dashboards, and streaming data.</p>
+        </div>
+      </div>
+
+      <h3>HTTP Methods</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Purpose</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GET</strong></td>
+            <td>Retrieve data</td>
+            <td><code>GET /users</code> &rarr; list all users</td>
+          </tr>
+          <tr>
+            <td><strong>POST</strong></td>
+            <td>Create new data</td>
+            <td><code>POST /users</code> &rarr; create a user</td>
+          </tr>
+          <tr>
+            <td><strong>PUT</strong></td>
+            <td>Update existing data</td>
+            <td><code>PUT /users/1</code> &rarr; update user 1</td>
+          </tr>
+          <tr>
+            <td><strong>DELETE</strong></td>
+            <td>Remove data</td>
+            <td><code>DELETE /users/1</code> &rarr; delete user 1</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>API Security</h3>
+      <ul>
+        <li><strong>Use HTTPS</strong> &mdash; Always encrypt API traffic to prevent interception</li>
+        <li><strong>Authentication</strong> &mdash; Verify identity using API keys, OAuth 2.0 tokens, or <span class="term">JWT<span class="tip">JSON Web Token &mdash; a compact, URL-safe token format containing encoded claims (user ID, roles, expiration). Signed by the server to prevent tampering.</span></span></li>
+        <li><strong><span class="term">Rate limiting<span class="tip">Restricting the number of API requests a client can make within a time window (e.g., 100 requests/minute). Prevents abuse, brute-force attacks, and protects server resources.</span></span></strong> &mdash; Prevent abuse by limiting the number of requests per client</li>
+        <li><strong>mTLS for internal APIs</strong> &mdash; Use mutual TLS for service-to-service communication in microservice architectures</li>
+        <li><strong>Input validation</strong> &mdash; Sanitize and validate all incoming data to prevent injection attacks</li>
+      </ul>
+
+      <h3>Common API Status Codes</h3>
+      <p>APIs use HTTP status codes to communicate the result of each request. The most common ones to know:</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Category</th><th>Code</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="2"><strong>Success (2xx)</strong></td><td>200 OK</td><td>Request succeeded</td></tr>
+          <tr><td>201 Created</td><td>New resource created</td></tr>
+          <tr><td rowspan="4"><strong>Client Error (4xx)</strong></td><td>400 Bad Request</td><td>Invalid request syntax or parameters</td></tr>
+          <tr><td>401 Unauthorized</td><td>Authentication required or failed</td></tr>
+          <tr><td>403 Forbidden</td><td>Authenticated but lacks permission</td></tr>
+          <tr><td>404 Not Found</td><td>Resource does not exist</td></tr>
+          <tr><td rowspan="2"><strong>Server Error (5xx)</strong></td><td>500 Internal Error</td><td>Unexpected server failure</td></tr>
+          <tr><td>503 Unavailable</td><td>Server overloaded or in maintenance</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Where APIs Are Used</h3>
+      <ul>
+        <li><strong>Web apps</strong> &mdash; Frontend communicating with backend services</li>
+        <li><strong>Mobile apps</strong> &mdash; Fetching data from remote servers</li>
+        <li><strong>Microservices</strong> &mdash; Services communicating with each other</li>
+        <li><strong>Cloud services</strong> &mdash; Managing infrastructure programmatically (AWS, GCP, Azure APIs)</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────── -->
+    <!-- Resources -->
+    <!-- ────────────────────────────────────────────────── -->
+    <section id="resources" class="section">
+      <h2>Resources</h2>
+      <p>Deepen your understanding with these recommended learning materials:</p>
+
+      <div class="resources-grid">
+        <a class="resource-card" href="https://www.cloudflare.com/learning/" target="_blank" rel="noopener">
+          <div class="res-title">Cloudflare Learning Center</div>
+          <div class="res-desc">Excellent free guides on DNS, SSL/TLS, HTTPS, and web security fundamentals.</div>
+        </a>
+        <a class="resource-card" href="https://developer.mozilla.org/en-US/docs/Web/HTTP" target="_blank" rel="noopener">
+          <div class="res-title">MDN Web Docs &mdash; HTTP</div>
+          <div class="res-desc">Mozilla&rsquo;s comprehensive HTTP reference covering methods, headers, status codes, and security.</div>
+        </a>
+        <a class="resource-card" href="https://www.practicalnetworking.net/" target="_blank" rel="noopener">
+          <div class="res-title">Practical Networking</div>
+          <div class="res-desc">Clear video tutorials and articles on networking concepts, subnetting, and protocols.</div>
+        </a>
+        <a class="resource-card" href="https://www.ssh.com/academy/ssh" target="_blank" rel="noopener">
+          <div class="res-title">SSH Academy</div>
+          <div class="res-desc">In-depth guides on SSH protocol, key management, tunneling, and best practices.</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quiz">
+      <h2>Test Your Knowledge</h2>
+      <p class="quiz-subtitle">10 random questions from this lesson. Refresh for a new set.</p>
+      <div id="quiz-container"></div>
+    </section>
+
+    <!-- ── Footer Navigation ──────────────────────────── -->
+    <nav class="footer-nav">
+      <a href="git-and-vcs.html" class="footer-link prev">
+        <span class="fl-label">&larr; Previous</span>
+        <span class="fl-title">Git &amp; Version Control</span>
+      </a>
+      <div class="footer-link next disabled">
+        <span class="fl-label">Next &rarr;</span>
+        <span class="fl-title">Linux &amp; OS (coming soon)</span>
+      </div>
+    </nav>
+
+  </main>
+</div>
+
+<!-- ── Mobile TOC ──────────────────────────────────────── -->
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-mobile-overlay" id="tocOverlay"></div>
+<div class="toc-mobile-panel" id="tocPanel">
+  <div class="sidebar-title">On this page</div>
+  <ul style="list-style:none;">
+    <li><a href="#ssh" onclick="closeToc()">SSH &amp; SSH Keys</a></li>
+    <li><a href="#dns-certificates" onclick="closeToc()">DNS &amp; Certificates</a></li>
+    <li><a href="#http-https" onclick="closeToc()">HTTP vs HTTPS</a></li>
+    <li><a href="#ssl-tls" onclick="closeToc()">SSL vs TLS</a></li>
+    <li><a href="#mtls" onclick="closeToc()">mTLS (Mutual TLS)</a></li>
+    <li><a href="#apis" onclick="closeToc()">APIs</a></li>
+    <li><a href="#resources" onclick="closeToc()">Resources</a></li>
+    <li><a href="#quiz" onclick="closeToc()">Quiz</a></li>
+  </ul>
+</div>
+
+<script>
+  // ── Copy code button ────────────────────────────────
+  function copyCode(btn) {
+    const code = btn.closest('.code-block-wrapper').querySelector('code');
+    const text = code.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1800);
+    });
+  }
+
+  // ── Mobile TOC ──────────────────────────────────────
+  const tocToggle  = document.getElementById('tocToggle');
+  const tocOverlay = document.getElementById('tocOverlay');
+  const tocPanel   = document.getElementById('tocPanel');
+
+  function openToc() {
+    tocOverlay.classList.add('open');
+    tocPanel.classList.add('open');
+  }
+  function closeToc() {
+    tocOverlay.classList.remove('open');
+    tocPanel.classList.remove('open');
+  }
+  tocToggle.addEventListener('click', () => {
+    tocPanel.classList.contains('open') ? closeToc() : openToc();
+  });
+  tocOverlay.addEventListener('click', closeToc);
+
+  // ── Active sidebar link on scroll ───────────────────
+  const sections = document.querySelectorAll('.section');
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+  function updateActive() {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top;
+      if (top <= 120) current = sec.id;
+    });
+    sidebarLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  // ── Quiz Engine ──────────────────────────────────────
+  const QUESTIONS = [
+    // SSH & SSH Keys (questions 1-9)
+    { q: "What does SSH stand for?", options: ["Secure Shell", "Simple Shell", "System Shell", "Safe Host"], correct: 0, explanation: "SSH stands for Secure Shell. It is a cryptographic network protocol for operating network services securely over an unsecured network." },
+    { q: "What is the default port for SSH?", options: ["80", "443", "22", "21"], correct: 2, explanation: "SSH operates on port 22 by default. Port 80 is HTTP, port 443 is HTTPS, and port 21 is FTP." },
+    { q: "What is an SSH key used for?", options: ["Encrypting files on disk", "Authenticating without passwords", "Compressing data", "Creating backups"], correct: 1, explanation: "SSH keys are a way to authenticate to remote servers without typing a password, using public-key cryptography instead." },
+    { q: "Which SSH key file should you NEVER share?", options: ["id_rsa.pub", "authorized_keys", "id_rsa", "known_hosts"], correct: 2, explanation: "id_rsa is your private key and must be kept secret. Only the public key (id_rsa.pub) should be shared with servers." },
+    { q: "What command generates a new SSH key pair?", options: ["ssh-connect", "ssh-keygen", "ssh-create", "ssh-new"], correct: 1, explanation: "The ssh-keygen command generates a new public/private SSH key pair. Common usage: ssh-keygen -t rsa -b 4096." },
+    { q: "Where are SSH keys stored by default?", options: ["/etc/ssh/", "~/.ssh/", "/var/ssh/", "~/keys/"], correct: 1, explanation: "SSH keys are stored in the ~/.ssh/ directory on your local machine by default (e.g., ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub)." },
+    { q: "What does the authorized_keys file contain?", options: ["Private keys of all users", "Public keys allowed to connect to the server", "Passwords for SSH access", "Server configuration settings"], correct: 1, explanation: "The authorized_keys file on a server lists the public keys that are allowed to authenticate and connect to that server." },
+    { q: "Why are SSH keys more secure than passwords?", options: ["They are shorter", "They use cryptographic key pairs that are nearly impossible to brute-force", "They are stored on the server", "They expire after one use"], correct: 1, explanation: "SSH keys use public-key cryptography with very large key sizes (e.g., 4096 bits), making them virtually impossible to brute-force compared to passwords." },
+    { q: "What does the known_hosts file track?", options: ["Users who have connected", "Fingerprints of servers you have connected to", "Failed login attempts", "Active SSH sessions"], correct: 1, explanation: "The known_hosts file stores the fingerprints of remote servers you've previously connected to, helping detect man-in-the-middle attacks." },
+
+    // DNS & Certificates (questions 10-18)
+    { q: "What does DNS stand for?", options: ["Digital Network Service", "Domain Name System", "Data Network Standard", "Direct Name Server"], correct: 1, explanation: "DNS stands for Domain Name System. It translates human-readable domain names (like google.com) into IP addresses that computers use." },
+    { q: "What does an A record do in DNS?", options: ["Maps a domain to another domain", "Maps a domain to an IPv4 address", "Routes email to a mail server", "Stores text verification data"], correct: 1, explanation: "An A (Address) record maps a domain name directly to an IPv4 address. For example, example.com → 192.168.1.1." },
+    { q: "What is a CNAME record used for?", options: ["Mapping a domain to an IP address", "Creating an alias from one domain to another", "Specifying a mail server", "Setting up DNS security"], correct: 1, explanation: "A CNAME (Canonical Name) record creates an alias, mapping one domain to another. For example, www.example.com → example.com." },
+    { q: "What type of DNS record is used for email routing?", options: ["A record", "CNAME record", "MX record", "TXT record"], correct: 2, explanation: "MX (Mail Exchange) records specify which mail server is responsible for receiving email for a domain." },
+    { q: "What is a digital certificate?", options: ["A password stored on a server", "An electronic document that proves the identity of a server", "A type of firewall rule", "A software license"], correct: 1, explanation: "A digital certificate is an electronic document issued by a Certificate Authority that proves the identity of a server, enabling secure HTTPS connections." },
+    { q: "What is a Root Certificate?", options: ["A certificate installed on every web server", "The top-level trusted certificate stored in your OS/browser", "A temporary certificate for testing", "A certificate that expires every day"], correct: 1, explanation: "A Root Certificate is the top-level trusted certificate, stored in your operating system and browser. It is issued by a Certificate Authority and forms the foundation of the trust chain." },
+    { q: "What is the certificate chain of trust?", options: ["A list of expired certificates", "The path from server certificate through intermediate to root CA", "A sequence of passwords", "A DNS resolution path"], correct: 1, explanation: "The certificate chain of trust goes: Server Certificate → Intermediate CA → Root CA. The browser validates the entire chain to establish trust." },
+    { q: "What is a TXT record commonly used for?", options: ["Mapping domains to IPs", "Email routing", "Domain ownership verification (Google, AWS, etc.)", "Redirecting traffic"], correct: 2, explanation: "TXT records store text information and are commonly used for domain ownership verification (Google, AWS), SPF email authentication, and DKIM signatures." },
+    { q: "What happens if a certificate in the chain is expired?", options: ["The connection proceeds normally", "The connection is rejected by the browser", "The certificate auto-renews", "Only the root CA is affected"], correct: 1, explanation: "If any certificate in the chain is broken, untrusted, or expired, the browser rejects the connection and displays a security warning." },
+
+    // HTTP vs HTTPS (questions 19-26)
+    { q: "What does HTTP stand for?", options: ["HyperText Transfer Protocol", "High Transfer Text Protocol", "Hyper Terminal Transfer Program", "Host Text Transfer Protocol"], correct: 0, explanation: "HTTP stands for HyperText Transfer Protocol. It is the foundation of data communication on the web." },
+    { q: "What port does HTTP use by default?", options: ["22", "443", "80", "8080"], correct: 2, explanation: "HTTP uses port 80 by default. HTTPS uses port 443, SSH uses port 22." },
+    { q: "What does the 'S' in HTTPS stand for?", options: ["Standard", "Secure", "Simple", "Server"], correct: 1, explanation: "The 'S' in HTTPS stands for Secure. HTTPS is HTTP with SSL/TLS encryption added for secure communication." },
+    { q: "What port does HTTPS use by default?", options: ["80", "22", "8443", "443"], correct: 3, explanation: "HTTPS uses port 443 by default. This is the standard port for encrypted web traffic." },
+    { q: "How does HTTP send data?", options: ["Encrypted with AES", "In plain text", "Compressed with gzip only", "Through a VPN tunnel"], correct: 1, explanation: "HTTP sends data in plain text, meaning anyone intercepting the traffic can read it. This is why HTTPS was created — to encrypt data in transit." },
+    { q: "What does HTTPS use to encrypt data?", options: ["SSH protocol", "SSL/TLS protocols", "FTP encryption", "Base64 encoding"], correct: 1, explanation: "HTTPS uses SSL/TLS protocols to encrypt all data transmitted between the client and server, ensuring confidentiality and integrity." },
+    { q: "Why do modern browsers flag HTTP sites?", options: ["HTTP is too fast", "HTTP sites are too large", "HTTP does not encrypt data, making it insecure", "HTTP uses too much bandwidth"], correct: 2, explanation: "Modern browsers mark HTTP sites as 'Not Secure' because data is transmitted in plain text, making it vulnerable to eavesdropping and tampering." },
+    { q: "What is required for a server to use HTTPS?", options: ["A static IP address only", "A valid TLS certificate", "A Linux operating system", "A paid domain name"], correct: 1, explanation: "HTTPS requires a valid TLS certificate installed on the server. The certificate proves the server's identity and enables encrypted communication." },
+
+    // SSL vs TLS (questions 27-34)
+    { q: "What does SSL stand for?", options: ["Secure Sockets Layer", "Simple Security Layer", "System Socket Link", "Standard Security Lock"], correct: 0, explanation: "SSL stands for Secure Sockets Layer. It was the original protocol for encrypting internet communications, now deprecated in favor of TLS." },
+    { q: "What does TLS stand for?", options: ["Transfer Layer System", "Transport Layer Security", "Trusted Link Service", "Total Lock System"], correct: 1, explanation: "TLS stands for Transport Layer Security. It is the modern, secure replacement for SSL." },
+    { q: "Why is SSL deprecated?", options: ["It was too expensive", "It had security vulnerabilities and weak encryption", "It was too fast", "It required too much storage"], correct: 1, explanation: "SSL is deprecated because of known security vulnerabilities and weak encryption algorithms. TLS replaced it with stronger security." },
+    { q: "Which is used in modern HTTPS connections?", options: ["SSL 2.0", "SSL 3.0", "TLS", "FTP"], correct: 2, explanation: "Modern HTTPS connections use TLS (Transport Layer Security), not SSL. TLS 1.2 and 1.3 are the current standards." },
+    { q: "What is the first step in a TLS handshake?", options: ["Server sends certificate", "Client says hello with supported cipher suites", "Keys are exchanged", "Data is encrypted"], correct: 1, explanation: "The TLS handshake begins with the client sending a 'Client Hello' message containing supported TLS versions and cipher suites." },
+    { q: "When people say 'SSL certificate' today, what do they actually mean?", options: ["A certificate using the SSL protocol", "A TLS certificate (the term SSL persists in common usage)", "An expired certificate", "A self-signed certificate"], correct: 1, explanation: "When people say 'SSL certificate' today, they almost always mean a TLS certificate. The term 'SSL' persists in common usage even though the protocol itself is deprecated." },
+    { q: "What is a cipher suite?", options: ["A physical encryption device", "A set of algorithms used for encryption, authentication, and key exchange", "A type of firewall", "A password manager"], correct: 1, explanation: "A cipher suite is a set of cryptographic algorithms that determine how encryption, authentication, and key exchange are performed during a TLS connection." },
+    { q: "What advantage does TLS 1.3 have over earlier versions?", options: ["It uses SSL underneath", "Faster handshake (1-RTT) and stronger encryption", "It works without certificates", "It only works on Linux"], correct: 1, explanation: "TLS 1.3 features a faster handshake (1 round-trip time vs 2), removed outdated cipher suites, and provides stronger default encryption." },
+
+    // mTLS (questions 35-42)
+    { q: "What makes mTLS 'mutual'?", options: ["It uses two passwords", "Both client AND server authenticate each other with certificates", "It encrypts data twice", "It requires two network connections"], correct: 1, explanation: "mTLS is 'mutual' because both the client and server present and verify certificates, unlike standard TLS where only the server is authenticated." },
+    { q: "In standard TLS, which side is authenticated?", options: ["Only the client", "Only the server", "Both client and server", "Neither"], correct: 1, explanation: "In standard TLS, only the server is authenticated via its certificate. The client typically authenticates using passwords or tokens instead." },
+    { q: "How many steps are in the mTLS process?", options: ["3", "4", "5", "6"], correct: 3, explanation: "mTLS involves 6 steps: client connects, server sends cert, client verifies server, client sends cert, server verifies client, secure connection established." },
+    { q: "Which is NOT a common use case for mTLS?", options: ["Public-facing websites for regular users", "Microservices communication", "Banking systems", "Zero trust architectures"], correct: 0, explanation: "mTLS is typically used for internal services, not public-facing websites. Regular users visiting a website use standard TLS; mTLS is for service-to-service and high-security scenarios." },
+    { q: "What does mTLS require that standard TLS does not?", options: ["A DNS record", "Client certificates", "A web server", "An internet connection"], correct: 1, explanation: "mTLS requires client certificates in addition to server certificates. Managing these client certificates adds complexity but provides stronger security." },
+    { q: "Where is mTLS commonly used in Kubernetes?", options: ["In the web browser", "In service meshes like Istio or Linkerd", "In DNS resolution", "In container image builds"], correct: 1, explanation: "In Kubernetes, mTLS is commonly implemented through service meshes like Istio or Linkerd, which automatically manage certificates for service-to-service communication." },
+    { q: "What security model relies heavily on mTLS?", options: ["Defense in depth", "Zero trust", "Security by obscurity", "Perimeter security"], correct: 1, explanation: "Zero trust security relies heavily on mTLS because it assumes no connection is trusted by default — every request must be authenticated, even within internal networks." },
+    { q: "What is a key benefit of mTLS over passwords?", options: ["Passwords are faster", "mTLS provides certificate-based authentication without passwords", "mTLS is simpler to set up", "Passwords offer stronger encryption"], correct: 1, explanation: "mTLS uses certificate-based authentication, eliminating the need for passwords. Certificates are harder to steal and can be automatically rotated." },
+
+    // APIs (questions 43-50)
+    { q: "What does API stand for?", options: ["Application Programming Interface", "Automated Process Integration", "Application Protocol Interface", "Advanced Program Interaction"], correct: 0, explanation: "API stands for Application Programming Interface. It is a set of rules and protocols that allows different software applications to communicate with each other." },
+    { q: "What HTTP method is used to retrieve data?", options: ["POST", "PUT", "GET", "DELETE"], correct: 2, explanation: "The GET method is used to retrieve/read data from a server. For example, GET /users returns a list of users." },
+    { q: "What HTTP method creates a new resource?", options: ["GET", "POST", "DELETE", "PATCH"], correct: 1, explanation: "The POST method is used to create a new resource on the server. For example, POST /users creates a new user." },
+    { q: "Which API type is the most common on the web?", options: ["SOAP", "GraphQL", "REST", "WebSocket"], correct: 2, explanation: "REST (Representational State Transfer) APIs are the most common on the web. They use standard HTTP methods, are stateless, and typically return JSON." },
+    { q: "What is GraphQL's main advantage over REST?", options: ["It is faster", "Clients request exactly the data they need", "It does not require HTTP", "It only works with databases"], correct: 1, explanation: "GraphQL's main advantage is that clients can request exactly the data they need in a single query, reducing over-fetching and under-fetching of data." },
+    { q: "What type of API supports real-time, full-duplex communication?", options: ["REST", "SOAP", "GraphQL", "WebSocket"], correct: 3, explanation: "WebSocket APIs provide full-duplex, real-time communication between client and server, making them ideal for chat apps, live dashboards, and streaming data." },
+    { q: "Which is NOT a recommended API security practice?", options: ["Using HTTPS", "Authentication with API keys or tokens", "Sending credentials in plain text URLs", "Rate limiting requests"], correct: 2, explanation: "Sending credentials in plain text URLs is a security risk. API security best practices include using HTTPS, authentication (API keys, OAuth, JWT), and rate limiting." },
+    { q: "What HTTP method is used to delete a resource?", options: ["GET", "POST", "PUT", "DELETE"], correct: 3, explanation: "The DELETE method is used to remove a resource from the server. For example, DELETE /users/1 removes the user with ID 1." },
+
+    // Enriched content questions (51-60)
+    { q: "What does a DNS AAAA record map a domain to?", options: ["Another domain name", "A mail server", "An IPv6 address", "An IPv4 address"], correct: 2, explanation: "An AAAA record maps a domain name to an IPv6 address, while an A record maps to an IPv4 address. IPv6 addresses are 128-bit (e.g., 2001:0db8::8a2e:0370:7334)." },
+    { q: "What are the three layers of the SSH protocol?", options: ["Application, Session, Network", "Transport, Authentication, Connection", "Physical, Data Link, Network", "Encryption, Verification, Tunneling"], correct: 1, explanation: "The SSH protocol consists of three layers: Transport (encryption and key exchange), Authentication (user identity verification), and Connection (multiplexing into channels for shells, SFTP, port forwarding)." },
+    { q: "Which SSH key algorithm is recommended for new setups?", options: ["DSA", "RSA 1024-bit", "Ed25519", "SSL"], correct: 2, explanation: "Ed25519 is the recommended algorithm for new SSH key setups. It is modern, fast, and uses a fixed 256-bit elliptic curve with strong security properties." },
+    { q: "What HTTP status code means 'Not Found'?", options: ["401", "403", "404", "500"], correct: 2, explanation: "HTTP 404 Not Found means the server cannot find the requested resource at the given URL. 401 is Unauthorized, 403 is Forbidden, and 500 is Internal Server Error." },
+    { q: "What is TTL in the context of DNS?", options: ["Total Transfer Length", "Time To Live — how long a record is cached", "Transport Tunnel Layer", "Trusted TLS Link"], correct: 1, explanation: "TTL (Time To Live) specifies how long (in seconds) a DNS record should be cached by resolvers before re-querying the authoritative server. Typical values range from 300 to 86400 seconds." },
+    { q: "What key improvement does HTTP/2 add over HTTP/1.1?", options: ["Encryption by default", "Multiplexing — multiple requests over a single connection", "UDP-based transport", "Removing the need for DNS"], correct: 1, explanation: "HTTP/2 introduces multiplexing, allowing multiple requests and responses to be sent simultaneously over a single TCP connection, along with header compression. This eliminates the head-of-line blocking issue in HTTP/1.1." },
+    { q: "What does 0-RTT mean in TLS 1.3?", options: ["Zero encryption overhead", "Connections that require no handshake for returning clients", "Removing round-trip for DNS", "Zero-trust authentication"], correct: 1, explanation: "0-RTT (zero round-trip time) in TLS 1.3 allows returning clients to send encrypted data immediately with the first message, skipping the handshake. This dramatically speeds up reconnections." },
+    { q: "What does a sidecar proxy do in a service mesh?", options: ["Blocks all external traffic", "Handles mTLS and routing transparently alongside each service", "Replaces the DNS server", "Compresses API responses"], correct: 1, explanation: "In a service mesh like Istio, a sidecar proxy (e.g., Envoy) is injected alongside each service. It handles mTLS certificate management, traffic routing, and observability transparently — the application code doesn't need to manage any of this." },
+    { q: "Which HTTP status code means 'Unauthorized'?", options: ["400", "401", "403", "418"], correct: 1, explanation: "HTTP 401 Unauthorized means the request requires authentication. The client must provide valid credentials (API key, token, etc.) to access the resource. 403 Forbidden means authenticated but lacking permission." },
+    { q: "Which is NOT a REST constraint?", options: ["Statelessness", "Client-server separation", "Cacheability", "Binary-only responses"], correct: 3, explanation: "REST constraints include statelessness, client-server separation, cacheability, uniform interface, and layered system. REST does not require binary responses — it commonly uses JSON or XML." }
+  ];
+
+  // ── Shuffle (Fisher-Yates) ──────────────────────────
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  let quizQuestions, currentQ, score, answered;
+
+  function initQuiz() {
+    quizQuestions = shuffle(QUESTIONS).slice(0, 10);
+    currentQ = 0;
+    score = 0;
+    answered = false;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = quizQuestions[currentQ];
+    const letters = ['A','B','C','D'];
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = `
+      <div class="quiz-header">
+        <span class="quiz-counter">Question ${currentQ + 1} / 10</span>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" style="width:${(currentQ/10)*100}%"></div>
+        </div>
+        <span class="quiz-score">Score: ${score}/10</span>
+      </div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map((opt,i) => `
+          <div class="quiz-option" onclick="selectAnswer(${i})" data-idx="${i}">
+            <span class="opt-letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div id="quiz-feedback"></div>
+      <div class="quiz-nav" id="quiz-nav" style="display:none">
+        <button class="quiz-next-btn" onclick="${currentQ < 9 ? 'currentQ++;renderQuestion()' : 'showResults()'}">
+          ${currentQ < 9 ? 'Next Question &rarr;' : 'See Results'}
+        </button>
+      </div>
+    `;
+    answered = false;
+  }
+
+  function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const q = quizQuestions[currentQ];
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.classList.add('disabled'));
+
+    if (idx === q.correct) {
+      score++;
+      options[idx].classList.add('correct');
+    } else {
+      options[idx].classList.add('wrong');
+      options[q.correct].classList.add('correct');
+    }
+
+    document.getElementById('quiz-feedback').innerHTML =
+      `<div class="quiz-explanation">${q.explanation}</div>`;
+    document.getElementById('quiz-nav').style.display = 'flex';
+    document.querySelector('.quiz-score').textContent = 'Score: ' + score + '/10';
+  }
+
+  function showResults() {
+    const passed = score >= 7;
+    document.getElementById('quiz-container').innerHTML = `
+      <div class="quiz-results">
+        <div class="score-circle ${passed ? 'pass' : 'fail'}">${score}/10</div>
+        <div class="result-msg">${passed ? 'Great job!' : 'Keep learning!'}</div>
+        <div class="result-sub">${passed ? 'You have a solid understanding of networking fundamentals.' : 'Review the content above and try again.'}</div>
+        <button class="quiz-restart-btn" onclick="initQuiz()">Retake Quiz</button>
+      </div>
+    `;
+  }
+
+  initQuiz();
+</script>
+</body>
+</html>
